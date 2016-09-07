@@ -19,6 +19,8 @@
 *.so
 *.so.*
 *.dylib
+*.ld
+*.d
 
 # Executables
 *.exe
@@ -60,6 +62,12 @@ Network Trash Folder
 Temporary Items
 .apdisk
 
+# Directories that are not useful but in the project
+Debug/
+Release/
+.settings/
+startup/
+
 # Windows
 # =========================
 
@@ -81,3 +89,7 @@ $RECYCLE.BIN/
 
 # Windows shortcuts
 *.lnk
+
+# Eclipse project files
+.cproject
+.project
