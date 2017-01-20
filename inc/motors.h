@@ -18,6 +18,7 @@ typedef enum{
 
 extern void Motors_init(void);
 extern void Motor_PWM(motor m, unsigned int percent_10000);
+extern void Motors_Stop(void);
 extern void Motor_Speed(motor m, unsigned int percent_10000, motor_direction dir);
 
 //-----------------------------------------------
