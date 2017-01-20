@@ -173,6 +173,14 @@ static void timer16_it_config(){
 	TIM_Cmd(TIM16, ENABLE);
 }
 
+extern void Motors_Stop(void){
+	Motor_PWM(right_side, NEUTRAL);
+	Motor_PWM(left_side, NEUTRAL);
+	Motor_PWM(top_right, NEUTRAL);
+	Motor_PWM(top_left, NEUTRAL);
+	Motor_PWM(middle, NEUTRAL);
+}
+
 extern void Motors_init(void){
 	timer3_it_config();
 	Motor_PWM(right_side, NEUTRAL);
