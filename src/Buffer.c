@@ -4,40 +4,31 @@
 #include <stdlib.h>
 
 extern void Buffer_add(Buffer* b, char* str){
-
-
-
-
-
-	struct str_node* temp = (struct str_node*) malloc(sizeof(struct str_node));
-	strcpy(temp->data, str);
-	temp->next = NULL;
-
-	if(b->size == 0){
-		b->front = temp;
-		b->rear = temp;
-		b->size = b->size + 1;
-		return;
+	if((b->idx_to_load - b->idx_to_pop) >= MAX_BUFFER_SIZE)
+	{
+		b->idx_to_pop++;
+		b->overflow_cnt++;
 	}
-	b->rear->next = temp;
-	b->rear = temp;
-	b->size = b->size + 1;
+
+	strcpy(b->data[b->idx_to_load % MAX_BUFFER_SIZE], str);
+	b->idx_to_load++;
 }
 
 // To DeBuffer an integer.
 //Pass in the address to ensure variable scope
 extern void Buffer_pop(Buffer* b, char* data) {
-	if(b->head > b->tail) {
-		strcpy(data, b->data[b->tail % MAX_BUFFER_SIZE]);
-		b->tail++;
+	if(b->idx_to_load > b->idx_to_pop)
+	{
+		strcpy(data, b->data[b->idx_to_pop % MAX_BUFFER_SIZE]);
+		b->idx_to_pop++;
 	}
 }
 
 extern void Buffer_init(Buffer* b){
-	b->head = 0;
-	b->tail = 0;
+	b->idx_to_load = 0;
+	b->idx_to_pop = 0;
 }
 
 extern int Buffer_size(Buffer* b){
-	return b->size;
+	return (b->idx_to_load - b->idx_to_pop);
 }

@@ -9,14 +9,16 @@
 
 typedef struct Buffer{
 	char data[MAX_BUFFER_SIZE][MAX_BUFFER_DATA];
-	uint16_t head;
-	uint16_t tail;
+	unsigned short idx_to_load;
+	unsigned short idx_to_pop;
+	unsigned short overflow_cnt;
 }Buffer;
 
 //Public functions ------------------------------
 
 extern void Buffer_add(Buffer* b, char* str);
 extern void Buffer_pop(Buffer* b, char* data);
+extern int Buffer_size(Buffer* b);
 extern void Buffer_init();
 
 //-----------------------------------------------
