@@ -4,6 +4,11 @@
 #include <stdlib.h>
 
 extern void Buffer_add(Buffer* b, char* str){
+
+
+
+
+
 	struct str_node* temp = (struct str_node*) malloc(sizeof(struct str_node));
 	strcpy(temp->data, str);
 	temp->next = NULL;
@@ -22,27 +27,15 @@ extern void Buffer_add(Buffer* b, char* str){
 // To DeBuffer an integer.
 //Pass in the address to ensure variable scope
 extern void Buffer_pop(Buffer* b, char* data) {
-	struct str_node* temp = b->front;
-	if(b->front == NULL) {
-		return;
+	if(b->head > b->tail) {
+		strcpy(data, b->data[b->tail % MAX_BUFFER_SIZE]);
+		b->tail++;
 	}
-	strcpy(data, b->front->data);
-	if(b->front == b->rear) {
-		b->front = b->rear = NULL;
-	}
-	else {
-		b->front = b->front->next;
-	}
-	free(temp);
-	b->size = b->size -1;
 }
 
-extern Buffer* Buffer_init(){
-	Buffer* b = (Buffer*) malloc(sizeof(Buffer));
-	b->size = 0;
-	b->front = NULL;
-	b->rear = NULL;
-	return b;
+extern void Buffer_init(Buffer* b){
+	b->head = 0;
+	b->tail = 0;
 }
 
 extern int Buffer_size(Buffer* b){
