@@ -22,6 +22,10 @@
 #include "stm32f0xx_syscfg.h"
 #include "PWM_in.h"
 
+#include "FreeRTOS.h"
+#include "task.h"
+#include "semphr.h"
+
 // ----------------------------------------------------------------------------
 //
 // Standalone STM32F0 led blink sample (trace via $(trace)).
