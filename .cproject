@@ -26,6 +26,7 @@
 								<option id="gnu.c.compiler.option.debugging.level.600621544" name="Debug Level" superClass="gnu.c.compiler.option.debugging.level" useByScannerDiscovery="false" value="gnu.c.debugging.level.max" valueType="enumerated"/>
 								<option id="gnu.c.compiler.option.include.paths.1579215557" name="Include paths (-I)" superClass="gnu.c.compiler.option.include.paths" useByScannerDiscovery="false" valueType="includePath">
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/stm32f0discovery_stdperiph_lib}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/rtos}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${ProjDirPath}/inc&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/stm32f0discovery_stdperiph_lib/CMSIS/core}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/stm32f0discovery_stdperiph_lib/CMSIS/device}&quot;"/>
@@ -45,6 +46,7 @@
 									<listOptionValue builtIn="false" value="STM32F051"/>
 								</option>
 								<option id="fr.ac6.managedbuid.gnu.c.compiler.option.misc.other.321177513" name="Other flags" superClass="fr.ac6.managedbuid.gnu.c.compiler.option.misc.other" useByScannerDiscovery="false" value="-fstack-usage -fmessage-length=0" valueType="string"/>
+								<option id="gnu.c.compiler.option.dialect.std.760466362" name="Language standard" superClass="gnu.c.compiler.option.dialect.std" useByScannerDiscovery="true" value="gnu.c.compiler.dialect.default" valueType="enumerated"/>
 								<inputType id="fr.ac6.managedbuild.tool.gnu.cross.c.compiler.input.c.1115830940" superClass="fr.ac6.managedbuild.tool.gnu.cross.c.compiler.input.c"/>
 								<inputType id="fr.ac6.managedbuild.tool.gnu.cross.c.compiler.input.s.610799125" superClass="fr.ac6.managedbuild.tool.gnu.cross.c.compiler.input.s"/>
 							</tool>
@@ -54,9 +56,12 @@
 							</tool>
 							<tool id="fr.ac6.managedbuild.tool.gnu.cross.c.linker.91706836" name="MCU GCC Linker" superClass="fr.ac6.managedbuild.tool.gnu.cross.c.linker">
 								<option id="gnu.c.link.option.paths.918105010" name="Library search path (-L)" superClass="gnu.c.link.option.paths" valueType="libPaths">
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/stm32f0discovery_stdperiph_lib/Release}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/rtos/Release}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/stm32f0discovery_stdperiph_lib/Debug}&quot;"/>
 								</option>
 								<option id="gnu.c.link.option.libs.1119124744" name="Libraries (-l)" superClass="gnu.c.link.option.libs" valueType="libs">
+									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="rtos"/>
 									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="stm32f0discovery_stdperiph_lib"/>
 								</option>
 								<inputType id="cdt.managedbuild.tool.gnu.c.linker.input.903485846" superClass="cdt.managedbuild.tool.gnu.c.linker.input">
@@ -69,13 +74,12 @@
 							<tool id="fr.ac6.managedbuild.tool.gnu.cross.assembler.2063791736" name="MCU GCC Assembler" superClass="fr.ac6.managedbuild.tool.gnu.cross.assembler">
 								<option id="gnu.both.asm.option.include.paths.761892287" name="Include paths (-I)" superClass="gnu.both.asm.option.include.paths" valueType="includePath">
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/stm32f0discovery_stdperiph_lib}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/rtos}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${ProjDirPath}/inc&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/stm32f0discovery_stdperiph_lib/CMSIS/core}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/stm32f0discovery_stdperiph_lib/CMSIS/device}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/stm32f0discovery_stdperiph_lib/StdPeriph_Driver/inc}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/stm32f0discovery_stdperiph_lib/Utilities}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Soft_start_2_move_over/rtos}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Soft_start_2_move_over/rtos/include}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/rtos/inc}&quot;"/>
 								</option>
 								<inputType id="cdt.managedbuild.tool.gnu.assembler.input.880257524" superClass="cdt.managedbuild.tool.gnu.assembler.input"/>
@@ -96,6 +100,15 @@
 						<entry flags="VALUE_WORKSPACE_PATH" kind="includePath" name="/stm32f0discovery_stdperiph_lib"/>
 						<entry flags="VALUE_WORKSPACE_PATH" kind="libraryPath" name="/stm32f0discovery_stdperiph_lib/Debug"/>
 						<entry flags="RESOLVED" kind="libraryFile" name="stm32f0discovery_stdperiph_lib" srcPrefixMapping="" srcRootPath=""/>
+					</externalSetting>
+				</externalSettings>
+				<externalSettings containerId="rtos;" factoryId="org.eclipse.cdt.core.cfg.export.settings.sipplier">
+					<externalSetting>
+						<entry flags="VALUE_WORKSPACE_PATH" kind="includePath" name="/stm32f0discovery_stdperiph_lib"/>
+						<entry flags="VALUE_WORKSPACE_PATH" kind="includePath" name="/rtos"/>
+						<entry flags="VALUE_WORKSPACE_PATH" kind="libraryPath" name="/stm32f0discovery_stdperiph_lib/Release"/>
+						<entry flags="VALUE_WORKSPACE_PATH" kind="libraryPath" name="/rtos/Release"/>
+						<entry flags="RESOLVED" kind="libraryFile" name="rtos" srcPrefixMapping="" srcRootPath=""/>
 					</externalSetting>
 				</externalSettings>
 			</storageModule>
@@ -125,6 +138,7 @@
 								<option id="gnu.c.compiler.option.debugging.level.1332083570" name="Debug Level" superClass="gnu.c.compiler.option.debugging.level" useByScannerDiscovery="false" value="gnu.c.debugging.level.none" valueType="enumerated"/>
 								<option id="gnu.c.compiler.option.include.paths.1559855253" name="Include paths (-I)" superClass="gnu.c.compiler.option.include.paths" useByScannerDiscovery="false" valueType="includePath">
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/stm32f0discovery_stdperiph_lib}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/rtos}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${ProjDirPath}/inc&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/stm32f0discovery_stdperiph_lib/CMSIS/core}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/stm32f0discovery_stdperiph_lib/CMSIS/device}&quot;"/>
@@ -140,6 +154,8 @@
 									<listOptionValue builtIn="false" value="USE_STDPERIPH_DRIVER"/>
 									<listOptionValue builtIn="false" value="STM32F051"/>
 								</option>
+								<option id="gnu.c.compiler.option.dialect.std.777940505" name="Language standard" superClass="gnu.c.compiler.option.dialect.std" useByScannerDiscovery="true" value="gnu.c.compiler.dialect.default" valueType="enumerated"/>
+								<option id="fr.ac6.managedbuid.gnu.c.compiler.option.misc.other.213117411" name="Other flags" superClass="fr.ac6.managedbuid.gnu.c.compiler.option.misc.other" useByScannerDiscovery="false" value="-fstack-usage -fmessage-length=0" valueType="string"/>
 								<inputType id="fr.ac6.managedbuild.tool.gnu.cross.c.compiler.input.c.605884216" superClass="fr.ac6.managedbuild.tool.gnu.cross.c.compiler.input.c"/>
 								<inputType id="fr.ac6.managedbuild.tool.gnu.cross.c.compiler.input.s.340237545" superClass="fr.ac6.managedbuild.tool.gnu.cross.c.compiler.input.s"/>
 							</tool>
@@ -150,8 +166,10 @@
 							<tool id="fr.ac6.managedbuild.tool.gnu.cross.c.linker.1438683838" name="MCU GCC Linker" superClass="fr.ac6.managedbuild.tool.gnu.cross.c.linker">
 								<option id="gnu.c.link.option.paths.290093941" name="Library search path (-L)" superClass="gnu.c.link.option.paths" valueType="libPaths">
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/stm32f0discovery_stdperiph_lib/Release}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/rtos/Release}&quot;"/>
 								</option>
 								<option id="gnu.c.link.option.libs.1732740596" name="Libraries (-l)" superClass="gnu.c.link.option.libs" valueType="libs">
+									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="rtos"/>
 									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="stm32f0discovery_stdperiph_lib"/>
 								</option>
 								<inputType id="cdt.managedbuild.tool.gnu.c.linker.input.1164659818" superClass="cdt.managedbuild.tool.gnu.c.linker.input">
@@ -164,6 +182,7 @@
 							<tool id="fr.ac6.managedbuild.tool.gnu.cross.assembler.1487568430" name="MCU GCC Assembler" superClass="fr.ac6.managedbuild.tool.gnu.cross.assembler">
 								<option id="gnu.both.asm.option.include.paths.1121609202" name="Include paths (-I)" superClass="gnu.both.asm.option.include.paths" valueType="includePath">
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/stm32f0discovery_stdperiph_lib}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/rtos}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${ProjDirPath}/inc&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/stm32f0discovery_stdperiph_lib/CMSIS/core}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/stm32f0discovery_stdperiph_lib/CMSIS/device}&quot;"/>
@@ -194,8 +213,10 @@
 				<externalSettings containerId="rtos;fr.ac6.managedbuild.config.gnu.cross.lib.release.1185892920" factoryId="org.eclipse.cdt.core.cfg.export.settings.sipplier">
 					<externalSetting>
 						<entry flags="VALUE_WORKSPACE_PATH" kind="includePath" name="/stm32f0discovery_stdperiph_lib"/>
+						<entry flags="VALUE_WORKSPACE_PATH" kind="includePath" name="/rtos"/>
 						<entry flags="VALUE_WORKSPACE_PATH" kind="libraryPath" name="/stm32f0discovery_stdperiph_lib/Release"/>
-						<entry flags="RESOLVED" kind="libraryFile" name="stm32f0discovery_stdperiph_lib" srcPrefixMapping="" srcRootPath=""/>
+						<entry flags="VALUE_WORKSPACE_PATH" kind="libraryPath" name="/rtos/Release"/>
+						<entry flags="RESOLVED" kind="libraryFile" name="rtos" srcPrefixMapping="" srcRootPath=""/>
 					</externalSetting>
 				</externalSettings>
 			</storageModule>
