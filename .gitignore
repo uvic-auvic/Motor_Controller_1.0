@@ -89,7 +89,3 @@ $RECYCLE.BIN/
 
 # Windows shortcuts
 *.lnk
-
-# Eclipse project files
-.cproject
-.project
