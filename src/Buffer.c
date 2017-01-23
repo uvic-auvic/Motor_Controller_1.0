@@ -27,8 +27,13 @@ extern void Buffer_pop(Buffer* b, char* data) {
 extern void Buffer_init(Buffer* b){
 	b->idx_to_load = 0;
 	b->idx_to_pop = 0;
+	b->overflow_cnt = 0;
 }
 
 extern int Buffer_size(Buffer* b){
 	return (b->idx_to_load - b->idx_to_pop);
+}
+
+extern int Buffer_overflow(Buffer* b){
+	return b->overflow_cnt;
 }
