@@ -143,15 +143,6 @@ void SVC_Handler(void)
 {
 }
 
-/**
-  * @brief  This function handles PendSVC exception.
-  * @param  None
-  * @retval None
-  */
-void PendSV_Handler(void)
-{
-}
-
 
 /**
   * @brief  This function handles EXTI 0 1 interrupt request.

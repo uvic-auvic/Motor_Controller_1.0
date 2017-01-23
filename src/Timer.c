@@ -79,16 +79,4 @@ timer_tick (void)
       --timer_delayCount;
     }
 }
-
-// ----- SysTick_Handler() ----------------------------------------------------
-
-void
-SysTick_Handler (void)
-{
-#if defined(USE_HAL_DRIVER)
-  HAL_IncTick();
-#endif
-  timer_tick ();
-}
-
 // ----------------------------------------------------------------------------
