@@ -4,7 +4,8 @@
 #include <stdlib.h>
 
 // Adds an element to the end of the queue
-extern void Buffer_add(Buffer* b, char* str){
+//  - str (the element) must be NULL terminated ('\0') for strcpy
+extern void Buffer_add(Buffer* b, const char* str){
 	// Insert element
 	strcpy(b->data[b->idx_to_load], str);
 	b->idx_to_load++;

@@ -18,7 +18,7 @@ typedef struct Buffer{
 
 //Public functions ------------------------------
 
-extern void Buffer_add(Buffer* b, char* str);
+extern void Buffer_add(Buffer* b, const char* str); // str must be \0 terminated
 extern void Buffer_pop(Buffer* b, char* data);
 extern int Buffer_size(Buffer* b);
 extern int Buffer_overflow(Buffer* b);
