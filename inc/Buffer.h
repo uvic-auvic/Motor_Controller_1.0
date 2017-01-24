@@ -2,6 +2,7 @@
 #define BUFFER_H_
 
 #include<string.h>
+#include "stm32f0xx.h"
 
 
 #define MAX_BUFFER_DATA (8)
@@ -9,9 +10,10 @@
 
 typedef struct Buffer{
 	char data[MAX_BUFFER_SIZE][MAX_BUFFER_DATA];
-	unsigned short idx_to_load; // Stores index where new element should go
-	unsigned short idx_to_pop; // Stores index of the next element to remove
-	unsigned short overflow_cnt; // Stores the number of buffer overflows
+	uint8_t idx_to_load; // Stores index where new element should go
+	uint8_t idx_to_pop; // Stores index of the next element to remove
+	uint8_t size; // Stores the number of elements in the buffer
+	uint8_t overflow_cnt; // Stores the number of buffer overflows
 }Buffer;
 
 //Public functions ------------------------------
