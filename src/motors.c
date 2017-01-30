@@ -66,7 +66,7 @@ static void timer3_it_config(void){
 	GPIO_struct.GPIO_Speed = GPIO_Speed_Level_3;
 	GPIO_Init(GPIOA, &GPIO_struct);
 
-	GPIO_struct.GPIO_Pin = GPIO_Pin_0 | GPIO_Pin_1;
+	GPIO_struct.GPIO_Pin = GPIO_Pin_0;
 	GPIO_Init(GPIOB, &GPIO_struct);
 
 	TIM_OCInitTypeDef outputChannelInit = {0,};
@@ -84,13 +84,9 @@ static void timer3_it_config(void){
 	TIM_OC3Init(TIM3, &outputChannelInit);
 	TIM_OC3PreloadConfig(TIM3, TIM_OCPreload_Enable);
 
-	TIM_OC4Init(TIM3, &outputChannelInit);
-	TIM_OC4PreloadConfig(TIM3, TIM_OCPreload_Enable);
-
 	GPIO_PinAFConfig(GPIOA, GPIO_PinSource6, GPIO_AF_1);
 	GPIO_PinAFConfig(GPIOA, GPIO_PinSource7, GPIO_AF_1);
 	GPIO_PinAFConfig(GPIOB, GPIO_PinSource0, GPIO_AF_1);
-	GPIO_PinAFConfig(GPIOB, GPIO_PinSource1, GPIO_AF_1);
 
 	/* TIM3 enable counter */
 	TIM_Cmd(TIM3, ENABLE);
