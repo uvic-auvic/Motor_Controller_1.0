@@ -21,7 +21,7 @@ static void comm_exec(char* comm, unsigned int arg){
 		Motors_Stop();
 	}
 	else if(strcmp(comm, "RV1") == 0){
-		char temp[] = {read_revoultions(right_side),'\r','\n', '\0'};
+		char temp[] = {read_revolutions(right_side),'\r','\n', '\0'};
 		Send_to_Odroid(temp);
 	}
 	else if(strcmp(comm, "DT1") == 0){
