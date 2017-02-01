@@ -2,9 +2,9 @@
 #define MOTORS_H_
 
 typedef enum{
-	right_side,
-	left_side,
-	top_right
+	motor1,
+	motor2,
+	motor3
 } motor;
 
 typedef enum{

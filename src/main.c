@@ -98,7 +98,7 @@ void TIM6_DAC_IRQHandler(void){
 void EXTI0_1_IRQHandler(void)
 {
 	if((EXTI->PR & EXTI_PR_PR0) == EXTI_PR_PR0){
-		motor_pulse(left_side);
+		motor_pulse(motor2);
 		GPIOC->ODR |= GPIO_ODR_8; /* turn on blue LED */
 		EXTI->PR |= EXTI_PR_PR0;
 	}

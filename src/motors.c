@@ -15,14 +15,14 @@ extern void Motor_PWM(motor m, unsigned int percent_10000){
 		percent_10000 = 1;
 	}
 	switch(m){
-	case (right_side):
-		TIM3->CCR1 = percent_10000 - 1;
+	case (motor1):
+		TIM3->CCR3 = percent_10000 -1;
 		break;
-	case (left_side):
+	case (motor2):
 		TIM3->CCR2 = percent_10000 -1;
 		break;
-	case(top_right):
-		TIM3->CCR3 = percent_10000 -1;
+	case (motor3):
+		TIM3->CCR1 = percent_10000 - 1;
 		break;
 	}
 }
@@ -87,14 +87,14 @@ static void timer3_it_config(void){
 }
 
 extern void Motors_Stop(void){
-	Motor_PWM(right_side, NEUTRAL);
-	Motor_PWM(left_side, NEUTRAL);
-	Motor_PWM(top_right, NEUTRAL);
+	Motor_PWM(motor1, NEUTRAL);
+	Motor_PWM(motor2, NEUTRAL);
+	Motor_PWM(motor3, NEUTRAL);
 }
 
 extern void Motors_init(void){
 	timer3_it_config();
-	Motor_PWM(right_side, NEUTRAL);
-	Motor_PWM(left_side, NEUTRAL);
-	Motor_PWM(top_right, NEUTRAL);
+	Motor_PWM(motor1, NEUTRAL);
+	Motor_PWM(motor2, NEUTRAL);
+	Motor_PWM(motor3, NEUTRAL);
 }

@@ -34,7 +34,7 @@ extern void reset_tim_interrupt_status(){
 extern void motor_pulse(motor m){
 	int result = 0;
 	switch(m){
-	case left_side:
+	case motor2:
 		if(TIM16->CNT < left_motor_last_pulse)
 			result = (CLOCK_PERIOD - left_motor_last_pulse) + TIM16->CNT;
 		else
@@ -48,7 +48,7 @@ extern void motor_pulse(motor m){
 extern int read_revoultions(motor m){
 	int total_clock_cycles = 0;
 	switch(m){
-	case right_side:
+	case motor3:
 		total_clock_cycles = TIM1->CCR1;
 		break;
 	}
@@ -59,7 +59,7 @@ extern int read_duty_cycle(motor m){
 	int total_clock_cycles = 0;
 	int high_clock_cycles = 0;
 	switch(m){
-	case right_side:
+	case motor3:
 		total_clock_cycles = TIM1->CCR1;
 		high_clock_cycles = TIM1->CCR2;
 		break;
