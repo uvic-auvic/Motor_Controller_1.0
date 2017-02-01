@@ -4,9 +4,7 @@
 typedef enum{
 	right_side,
 	left_side,
-	top_right,
-	top_left,
-	middle
+	top_right
 } motor;
 
 typedef enum{
