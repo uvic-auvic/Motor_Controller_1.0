@@ -78,14 +78,6 @@ main(int argc, char* argv[])
 	while (1);
 }
 
-void TIM6_DAC_IRQHandler(void){
-	if (TIM_GetITStatus(TIM6, TIM_IT_Update) != RESET)
-	{
-		TIM_ClearITPendingBit(TIM6, TIM_IT_Update);
-		GPIOC->ODR ^= GPIO_ODR_9;
-	}
-}
-
 void EXTI0_1_IRQHandler(void)
 {
 	if((EXTI->PR & EXTI_PR_PR0) == EXTI_PR_PR0){
