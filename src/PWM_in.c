@@ -73,7 +73,7 @@ extern int read_duty_cycle(motor m){
 		total_clock_cycles = TIM15->CCR2;
 		break;
 	}
-	return ((high_clock_cycles * 100) / total_clock_cycles); //The hundred is how percent work
+	return ((high_clock_cycles * 10000) / total_clock_cycles); //The hundred is how percent work
 }
 
 // Should return PWM frequency
@@ -155,24 +155,27 @@ static void timer15_IT_config(){
 	GPIO_PinAFConfig(GPIOB, GPIO_PinSource14, GPIO_AF_2);
 
 	// Initialize TIM15
-	TIM_TimeBaseStructure.TIM_Period = CLOCK_PERIOD-1;
+	TIM_TimeBaseStructure.TIM_Period = 50000-1;
 	TIM_TimeBaseStructure.TIM_Prescaler = 960-1;
 	TIM_TimeBaseStructure.TIM_ClockDivision = 0;
 	TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_Up;
 	TIM_TimeBaseInit(TIM15, &TIM_TimeBaseStructure);
 
 	// Set CC1S to 01 and CC2S to 10
-	TIM15->CCMR1 |= TIM_CCMR1_CC1S_0 | TIM_CCMR1_CC2S_1; // Set bits
-	TIM15->CCMR1 &= ~TIM_CCMR1_CC1S_1 & ~TIM_CCMR1_CC2S_0; // Reset bits
+	// Set the input filtering to every 8 clock cycles
+	TIM15->CCMR1 |= TIM_CCMR1_CC1S_0 | TIM_CCMR1_CC2S_1 | TIM_CCMR1_IC1F_0 | TIM_CCMR1_IC1F_1;; // Set bits
 
 	// Enable capture compare on 1&2, and make CC1 rising edge, and CC2 falling edge
 	TIM15->CCER |= TIM_CCER_CC1E | TIM_CCER_CC2E |TIM_CCER_CC2P; // Set bits
-	TIM15->CCER &= ~TIM_CCER_CC1P; // Reset bits
+
+	TIM15->DIER |= TIM_DIER_CC1IE;
 
 	// TS is used to select valid trigger input (101)
 	// SMS is used to put the timer in slave mode with reset (100)
 	TIM15->SMCR |= TIM_SMCR_TS_0 | TIM_SMCR_TS_2 | TIM_SMCR_SMS_2; // Set bits
-	TIM15->SMCR &= ~TIM_SMCR_TS_1 & ~TIM_SMCR_SMS_1 & ~TIM_SMCR_SMS_0; // Reset bits
+
+	// Enable the counter
+	TIM15->CR1 |= TIM_CR1_CEN;
 }
 
 static void timer1_IT_config(){
