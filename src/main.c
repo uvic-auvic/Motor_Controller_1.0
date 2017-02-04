@@ -78,40 +78,16 @@ main(int argc, char* argv[])
 	while (1);
 }
 
-void TIM2_IRQHandler(void)
-{
-	if (TIM_GetITStatus(TIM2, TIM_IT_Update) != RESET)
-	{
-		TIM_ClearITPendingBit(TIM2, TIM_IT_Update);
-		//GPIO_WriteBit(GPIOC, GPIO_Pin_8, !GPIO_ReadInputDataBit(GPIOC, GPIO_Pin_8));
-	}
-}
-
-void TIM6_DAC_IRQHandler(void){
-	if (TIM_GetITStatus(TIM6, TIM_IT_Update) != RESET)
-	{
-		TIM_ClearITPendingBit(TIM6, TIM_IT_Update);
-		GPIOC->ODR ^= GPIO_ODR_9;
-	}
-}
-
 void EXTI0_1_IRQHandler(void)
 {
 	if((EXTI->PR & EXTI_PR_PR0) == EXTI_PR_PR0){
-		motor_pulse(left_side);
+		motor_pulse(motor2);
 		GPIOC->ODR |= GPIO_ODR_8; /* turn on blue LED */
 		EXTI->PR |= EXTI_PR_PR0;
 	}
 	if((EXTI->PR & EXTI_PR_PR1) == EXTI_PR_PR1){
 		GPIOC->ODR &= ~(GPIO_ODR_8); /* turn off blue LED */
 		EXTI->PR |= EXTI_PR_PR1;
-	}
-}
-
-void TIM16_IRQHandler(void)//Once per second
-{
-	if (TIM_GetITStatus(TIM16, TIM_IT_Update) != RESET){
-		TIM_ClearITPendingBit(TIM16, TIM_IT_Update);
 	}
 }
 

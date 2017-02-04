@@ -12,20 +12,20 @@ Buffer output_buff;
 
 static void comm_exec(char* comm, unsigned int arg){
 	if( strcmp(comm, "M1F") == 0){
-		Motor_Speed(right_side, arg, Forward);
+		Motor_Speed(motor1, arg, Forward);
 	}
 	else if(strcmp(comm, "M1R") == 0){
-		Motor_Speed(right_side, arg, Reverse);
+		Motor_Speed(motor1, arg, Reverse);
 	}
 	else if(strcmp(comm, "STP") == 0){
 		Motors_Stop();
 	}
 	else if(strcmp(comm, "RV1") == 0){
-		char temp[] = {read_revolutions(right_side),'\r','\n', '\0'};
+		char temp[] = {read_revoultions(motor1),'\r','\n', '\0'};
 		Send_to_Odroid(temp);
 	}
 	else if(strcmp(comm, "DT1") == 0){
-		char temp[] = {read_duty_cycle(right_side),'\r','\n', '\0'};
+		char temp[] = {read_duty_cycle(motor1),'\r','\n', '\0'};
 		Send_to_Odroid(temp);
 	}
 	else{
