@@ -56,9 +56,8 @@
 							</tool>
 							<tool id="fr.ac6.managedbuild.tool.gnu.cross.c.linker.91706836" name="MCU GCC Linker" superClass="fr.ac6.managedbuild.tool.gnu.cross.c.linker">
 								<option id="gnu.c.link.option.paths.918105010" name="Library search path (-L)" superClass="gnu.c.link.option.paths" valueType="libPaths">
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/stm32f0discovery_stdperiph_lib/Release}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/rtos/Release}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/stm32f0discovery_stdperiph_lib/Debug}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/rtos/Debug}&quot;"/>
 								</option>
 								<option id="gnu.c.link.option.libs.1119124744" name="Libraries (-l)" superClass="gnu.c.link.option.libs" valueType="libs">
 									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="rtos"/>
@@ -106,8 +105,8 @@
 					<externalSetting>
 						<entry flags="VALUE_WORKSPACE_PATH" kind="includePath" name="/stm32f0discovery_stdperiph_lib"/>
 						<entry flags="VALUE_WORKSPACE_PATH" kind="includePath" name="/rtos"/>
-						<entry flags="VALUE_WORKSPACE_PATH" kind="libraryPath" name="/stm32f0discovery_stdperiph_lib/Release"/>
-						<entry flags="VALUE_WORKSPACE_PATH" kind="libraryPath" name="/rtos/Release"/>
+						<entry flags="VALUE_WORKSPACE_PATH" kind="libraryPath" name="/stm32f0discovery_stdperiph_lib/Debug"/>
+						<entry flags="VALUE_WORKSPACE_PATH" kind="libraryPath" name="/rtos/Debug"/>
 						<entry flags="RESOLVED" kind="libraryFile" name="rtos" srcPrefixMapping="" srcRootPath=""/>
 					</externalSetting>
 				</externalSettings>
