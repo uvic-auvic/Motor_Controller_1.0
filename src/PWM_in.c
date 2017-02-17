@@ -103,12 +103,12 @@ static void timer2_IT_config(){
 	/* TIM2 clock enable */
 	RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM2, ENABLE);
 
-	/* GPIOB Configuration: TIM2 CH2 (PA1) */
+	/* GPIOA Configuration: TIM2 CH2 (PA1) */
 	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_1;
 	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF; // Input/Output controlled by peripheral
 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
 	GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
-	GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_UP;
+	GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_UP; // Button to ground expectation
 	GPIO_Init(GPIOA, &GPIO_InitStructure);
 
 	/* Connect TIM2 pins to AF */
@@ -121,20 +121,21 @@ static void timer2_IT_config(){
 	TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_Up;
 	TIM_TimeBaseInit(TIM2, &TIM_TimeBaseStructure);
 
-	/* (1) Select the active input TI1 (CC1S = 01),
-	program the input filter for 8 clock cycles (IC1F = 0011),
-	select the rising edge on CC1 (CC1P = 0, reset value)
-	and prescaler at each valid transition (IC1PS = 00, reset value) */
-	/* (2) Enable capture by setting CC1E */
-	/* (3) Enable interrupt on Capture/Compare */
-	/* (4) TS the filtering input off channel 1, and put into reset mode*/
-	/* (5) Enable counter */
-	TIM2->CCMR1 |= TIM_CCMR1_CC1S_1 | TIM_CCMR1_CC2S_0 | TIM_CCMR1_IC2F_0 | TIM_CCMR1_IC2F_1; /* (1) */
-	TIM2->CCER |= TIM_CCER_CC2E | TIM_CCER_CC1E | TIM_CCER_CC1P; /* (2) */
-	TIM2->DIER |= TIM_DIER_CC2IE; /* (3) */
-	//TS 110: Filtered Timer Input 1 (TI2FP2)
+	// Note: CC - Capture/Compare
+	// Set CC1 and CC2 to channel 2, and make an 8 clock cycle filter on channel 2
+	TIM2->CCMR1 |= TIM_CCMR1_CC1S_1 | TIM_CCMR1_CC2S_0 | TIM_CCMR1_IC2F_0 | TIM_CCMR1_IC2F_1;
+
+	// Enable CCR2 update for rising edge, CCR1 update for falling edge
+	TIM2->CCER |= TIM_CCER_CC2E | TIM_CCER_CC1E | TIM_CCER_CC1P;
+
+	// Enable interrupt on CC2
+	TIM2->DIER |= TIM_DIER_CC2IE;
+
+	// Make slave mode reset on rising edge from channel 2
 	TIM2->SMCR |= TIM_SMCR_TS_2 | TIM_SMCR_TS_1 | TIM_SMCR_SMS_2;
-	TIM2->CR1 |= TIM_CR1_CEN; /* (5) */
+
+	// Enable CC
+	TIM2->CR1 |= TIM_CR1_CEN;
 }
 
 static void timer15_IT_config(){
@@ -165,12 +166,21 @@ static void timer15_IT_config(){
 	TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_Up;
 	TIM_TimeBaseInit(TIM15, &TIM_TimeBaseStructure);
 
-	TIM15->CCMR1 |= TIM_CCMR1_CC2S_1 | TIM_CCMR1_CC1S_0 | TIM_CCMR1_IC1F_0 | TIM_CCMR1_IC1F_1; /* (1) */
-	TIM15->CCER |= TIM_CCER_CC1E | TIM_CCER_CC2E | TIM_CCER_CC2P; /* (2) */
-	TIM15->DIER |= TIM_DIER_CC1IE; /* (3) */
-	//TS 101: Filtered Timer Input 1 (TI1FP1)
+	// Note: CC - Capture/Compare
+	// Set CC1 and CC2 to channel 1, and make an 8 clock cycle filter on channel 1
+	TIM15->CCMR1 |= TIM_CCMR1_CC2S_1 | TIM_CCMR1_CC1S_0 | TIM_CCMR1_IC1F_0 | TIM_CCMR1_IC1F_1;
+
+	// Enable CCR1 update for rising edge, CCR2 update for falling edge
+	TIM15->CCER |= TIM_CCER_CC1E | TIM_CCER_CC2E | TIM_CCER_CC2P;
+
+	// Enable interrupt on CC1
+	TIM15->DIER |= TIM_DIER_CC1IE;
+
+	// Make slave mode reset on rising edge from channel 1
 	TIM15->SMCR |= TIM_SMCR_TS_2 | TIM_SMCR_TS_0 | TIM_SMCR_SMS_2;
-	TIM15->CR1 |= TIM_CR1_CEN; /* (5) */
+
+	// Enable CC
+	TIM15->CR1 |= TIM_CR1_CEN;
 }
 
 static void timer1_IT_config(){
@@ -219,11 +229,11 @@ static void timer1_IT_config(){
 	   * CC3S = 10 and CC4S = 01
 	   * Capture at the clock frequency and filter with 8 sequential levels
 	   */
-	  //TIM1->CCMR2 |= TIM_CCMR2_CC3S_1 | TIM_CCMR2_CC4S_0 | TIM_CCMR2_IC4F_0 | TIM_CCMR2_IC4F_1; // (1)
+	  TIM1->CCMR2 |= TIM_CCMR2_CC3S_1 | TIM_CCMR2_CC4S_0 | TIM_CCMR2_IC4F_0 | TIM_CCMR2_IC4F_1; // (1)
 	  /*(2) Select channel 3 to trigger on rising edge and channel 4 to be falling edge
 	   * This is used after the reset to determine the frequency and duty cycle
 	   */
-	  //TIM1->CCER |= TIM_CCER_CC3E | TIM_CCER_CC4E | TIM_CCER_CC4P; // (2)
+	  TIM1->CCER |= TIM_CCER_CC3E | TIM_CCER_CC4E | TIM_CCER_CC4P; // (2)
 }
 
 extern void pwm_in_init(){
