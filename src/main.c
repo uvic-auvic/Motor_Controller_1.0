@@ -14,7 +14,7 @@
 #include "stm32f0xx_misc.h"
 #include "stm32f0xx_tim.h"
 #include <stm32f0xx_rcc.h>
-#include "UART_Receiver.h"
+#include "UART.h"
 #include "FSM.h"
 #include "Buffer.h"
 #include "motors.h"
@@ -37,14 +37,56 @@
 void blinkyTask(void *dummy){
 	while(1){
 		GPIOC->ODR ^= GPIO_ODR_9;
+		GPIOA->ODR ^= GPIO_ODR_3;
 		/* maintain LED C9 status for 200ms */
 		vTaskDelay(500);
+	}
+}
+
+void FSM(void *dummy){
+	//initialize the FSM and UART
+	FSM_Init();
+	UART_init();
+
+	inputBuffer.size = 0;
+
+	//temporary storage to return from buffer
+	char commandString[MAX_BUFFER_SIZE] = "";
+
+	while(1){
+		//it's important that this is while, if the task is accidentally awaken it
+		//can't execute without having at least one item the input puffer
+		while(inputBuffer.size == 0){
+			//sleeps the task into it is notified to continue
+			ulTaskNotifyTake( pdTRUE, portMAX_DELAY );
+		}
+		//Write a statement here to do a string comparison on commands
+		Buffer_pop(&inputBuffer, commandString);
+		char arguement = commandString[3];
+		commandString[3] = '\0';
+		if(strcmp(commandString, "VLT") == 0){
+			GPIOC->ODR ^= GPIO_ODR_9;
+		}
+		else if(strcmp(commandString, "M1F") == 0){
+			Motor_Speed(motor1, ((unsigned int)(arguement)), Forward);
+		}
+		else{
+			UART_push_out("error: ");
+			UART_push_out(commandString);
+			UART_push_out("\r\n");
+		}
 	}
 }
 
 void vGeneralTaskInit(void){
     xTaskCreate(blinkyTask,
 		(const signed char *)"blinkyTask",
+		configMINIMAL_STACK_SIZE,
+		NULL,                 // pvParameters
+		tskIDLE_PRIORITY + 1, // uxPriority
+		NULL              ); // pvCreatedTask */
+    xTaskCreate(FSM,
+		(const signed char *)"FSM",
 		configMINIMAL_STACK_SIZE,
 		NULL,                 // pvParameters
 		tskIDLE_PRIORITY + 1, // uxPriority
@@ -57,17 +99,30 @@ main(int argc, char* argv[])
 
 	blink_led_init();
 
-	timer1_IT_config();
+	//timer1_IT_config();
 
 	//timer6_gen_system_clock_init();
 
-	Configure_GPIO_LED();
-	Configure_GPIO_USART1();
-	Configure_USART1();
+	//Configure_GPIO_LED();
+	//Configure_GPIO_USART1();
+	//Configure_USART1();
 
 	Motors_init();
 	//timer_start();
-	config_exti_A0_A1();
+	//config_exti_A0_A1();
+
+	//initialize structs
+	GPIO_InitTypeDef GPIO_struct;
+
+	//initialize the LEDs
+	GPIO_struct.GPIO_Pin = GPIO_Pin_8;
+	GPIO_struct.GPIO_Mode = GPIO_Mode_AF;
+	GPIO_struct.GPIO_OType = GPIO_OType_PP;
+	GPIO_struct.GPIO_PuPd = GPIO_PuPd_NOPULL;
+	GPIO_struct.GPIO_Speed = GPIO_Speed_Level_3;
+	//GPIO_Init(GPIOA, &GPIO_struct);
+
+	//GPIO_PinAFConfig(GPIOA, GPIO_PinSource8, GPIO_AF_0);
 
 	vGeneralTaskInit();
 

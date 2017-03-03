@@ -1,10 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>Motor_Controller_1.0</name>
+	<name>Motor_Controller_1.0_temp</name>
 	<comment></comment>
 	<projects>
-		<project>stm32f0discovery_stdperiph_lib</project>
-		<project>rtos</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>

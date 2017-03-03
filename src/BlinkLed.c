@@ -24,14 +24,14 @@ blink_led_init()
   //Be careful because not erasing any of the past settings so failure to overwrite will keep them
 
   //Select port 3 to be our toggle port
-  GPIO_InitStructure.GPIO_Pin = GPIO_Pin_9;
+  GPIO_InitStructure.GPIO_Pin = GPIO_Pin_3;
   GPIO_InitStructure.GPIO_Mode = GPIO_Mode_OUT;
   GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
   GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
   GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL;
-  GPIO_Init(GPIOC, &GPIO_InitStructure);
+  GPIO_Init(GPIOA, &GPIO_InitStructure);
 
-  GPIO_WriteBit(GPIOC, GPIO_Pin_9, Bit_RESET);
+  GPIO_WriteBit(GPIOA, GPIO_Pin_3, Bit_RESET);
 }
 
 /*(void
