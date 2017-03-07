@@ -10,10 +10,10 @@
 #include "motors.h"
 
 //Public functions
-extern void timer1_IT_config();
-extern void timer1_it_config(void);
+extern void pwm_in_init(void);
 extern int read_duty_cycle(motor m);
-extern int read_revoultions(motor m);
+extern int read_frequency(motor m);
+extern int read_revolutions(motor m);
 extern void config_exti_A0_A1(void);
 
 #endif

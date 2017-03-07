@@ -45,7 +45,7 @@ extern void motor_pulse(motor m){
 	}
 }
 
-extern int read_revoultions(motor m){
+extern int read_revolutions(motor m){
 	int total_clock_cycles = 0;
 	switch(m){
 	case motor3:
@@ -55,29 +55,145 @@ extern int read_revoultions(motor m){
 	return CLOCK_PERIOD / total_clock_cycles ; // /CYCLES_PER_REV; //Need to fix this after debug
 }
 
+// Should return duty cycle of motor PWM
 extern int read_duty_cycle(motor m){
 	int total_clock_cycles = 0;
 	int high_clock_cycles = 0;
 	switch(m){
+	case motor1:
+		total_clock_cycles = TIM15->CCR1;
+		high_clock_cycles = TIM15->CCR2;
+		break;
+	case motor2:
+		total_clock_cycles = TIM2->CCR2;
+		high_clock_cycles = TIM2->CCR1;
+		break;
 	case motor3:
 		total_clock_cycles = TIM1->CCR1;
 		high_clock_cycles = TIM1->CCR2;
 		break;
 	}
-	return ((high_clock_cycles * 100) / total_clock_cycles); //The hundred is how percent work
+	return ((high_clock_cycles * 10000) / total_clock_cycles); //The hundred is how percent work
 }
 
-extern void timer1_IT_config(){
+// Should return PWM frequency
+extern int read_frequency(motor m){
+	int period_clk_cycles = 0;
+	switch(m){
+	case motor1:
+		period_clk_cycles = TIM15->CCR1;
+		break;
+	case motor2:
+		period_clk_cycles = TIM2->CCR2;
+		break;
+	case motor3:
+		period_clk_cycles = TIM1->CCR1;
+		break;
+	}
+	return CLOCK_PERIOD / period_clk_cycles;
+}
+
+static void timer2_IT_config(){
+	GPIO_InitTypeDef GPIO_InitStructure;
+	TIM_TimeBaseInitTypeDef TIM_TimeBaseStructure;
+
+	/* GPIOA clock enable */
+	RCC_AHBPeriphClockCmd(RCC_AHBPeriph_GPIOA, ENABLE);
+
+	/* TIM2 clock enable */
+	RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM2, ENABLE);
+
+	/* GPIOA Configuration: TIM2 CH2 (PA1) */
+	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_1;
+	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF; // Input/Output controlled by peripheral
+	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+	GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
+	GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_UP; // Button to ground expectation
+	GPIO_Init(GPIOA, &GPIO_InitStructure);
+
+	/* Connect TIM2 pins to AF */
+	GPIO_PinAFConfig(GPIOA, GPIO_PinSource1, GPIO_AF_2);
+
+	// Initialize TIM2
+	TIM_TimeBaseStructure.TIM_Period = 50000-1;
+	TIM_TimeBaseStructure.TIM_Prescaler = 960-1;
+	TIM_TimeBaseStructure.TIM_ClockDivision = 0;
+	TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_Up;
+	TIM_TimeBaseInit(TIM2, &TIM_TimeBaseStructure);
+
+	// Note: CC - Capture/Compare
+	// Set CC1 and CC2 to channel 2, and make an 8 clock cycle filter on channel 2
+	TIM2->CCMR1 |= TIM_CCMR1_CC1S_1 | TIM_CCMR1_CC2S_0 | TIM_CCMR1_IC2F_0 | TIM_CCMR1_IC2F_1;
+
+	// Enable CCR2 update for rising edge, CCR1 update for falling edge
+	TIM2->CCER |= TIM_CCER_CC2E | TIM_CCER_CC1E | TIM_CCER_CC1P;
+
+	// Enable interrupt on CC2
+	TIM2->DIER |= TIM_DIER_CC2IE;
+
+	// Make slave mode reset on rising edge from channel 2
+	TIM2->SMCR |= TIM_SMCR_TS_2 | TIM_SMCR_TS_1 | TIM_SMCR_SMS_2;
+
+	// Enable CC
+	TIM2->CR1 |= TIM_CR1_CEN;
+}
+
+static void timer15_IT_config(){
+	GPIO_InitTypeDef GPIO_InitStructure;
+	TIM_TimeBaseInitTypeDef TIM_TimeBaseStructure;
+
+	/* GPIOB clock enable */
+	RCC_AHBPeriphClockCmd(RCC_AHBPeriph_GPIOB, ENABLE);
+
+	/* TIM15 clock enable */
+	RCC_APB2PeriphClockCmd(RCC_APB2Periph_TIM15, ENABLE);
+
+	/* GPIOB Configuration: TIM15 CH1 (PB14) */
+	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_14;
+	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF; // Input/Output controlled by peripheral
+	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+	GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
+	GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_UP;
+	GPIO_Init(GPIOB, &GPIO_InitStructure);
+
+	/* Connect TIM15 pins to AF */
+	GPIO_PinAFConfig(GPIOB, GPIO_PinSource14, GPIO_AF_1);
+
+	// Initialize TIM15
+	TIM_TimeBaseStructure.TIM_Period = 50000-1;
+	TIM_TimeBaseStructure.TIM_Prescaler = 960-1;
+	TIM_TimeBaseStructure.TIM_ClockDivision = 0;
+	TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_Up;
+	TIM_TimeBaseInit(TIM15, &TIM_TimeBaseStructure);
+
+	// Note: CC - Capture/Compare
+	// Set CC1 and CC2 to channel 1, and make an 8 clock cycle filter on channel 1
+	TIM15->CCMR1 |= TIM_CCMR1_CC2S_1 | TIM_CCMR1_CC1S_0 | TIM_CCMR1_IC1F_0 | TIM_CCMR1_IC1F_1;
+
+	// Enable CCR1 update for rising edge, CCR2 update for falling edge
+	TIM15->CCER |= TIM_CCER_CC1E | TIM_CCER_CC2E | TIM_CCER_CC2P;
+
+	// Enable interrupt on CC1
+	TIM15->DIER |= TIM_DIER_CC1IE;
+
+	// Make slave mode reset on rising edge from channel 1
+	TIM15->SMCR |= TIM_SMCR_TS_2 | TIM_SMCR_TS_0 | TIM_SMCR_SMS_2;
+
+	// Enable CC
+	TIM15->CR1 |= TIM_CR1_CEN;
+}
+
+static void timer1_IT_config(){
 	  GPIO_InitTypeDef GPIO_InitStructure;
 	  TIM_TimeBaseInitTypeDef TIM_TimeBaseStructure;
 
-	  /* GPIOC clock enable */
+	  /* GPIOA clock enable */
 	  RCC_AHBPeriphClockCmd(RCC_AHBPeriph_GPIOA, ENABLE);
 
-	  /* TIM2 clock enable */
+	  /* TIM1 clock enable */
 	  RCC_APB2PeriphClockCmd(RCC_APB2Periph_TIM1, ENABLE);
 
-	  /* GPIOA Configuration: TIM2 CH1 (PA8) */
+	  /* GPIOA Configuration: TIM1 CH1 (PA8) */
 	  GPIO_InitStructure.GPIO_Pin = GPIO_Pin_8;
 	  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF; // Input/Output controlled by peripheral
 	  GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
@@ -85,7 +201,7 @@ extern void timer1_IT_config(){
 	  GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_UP; // Button to ground expectation
 	  GPIO_Init(GPIOA, &GPIO_InitStructure);
 
-	    /* Connect TIM2 pins to AF */
+	    /* Connect TIM1 pins to AF */
 	  GPIO_PinAFConfig(GPIOA, GPIO_PinSource8, GPIO_AF_2);
 
 	  TIM_TimeBaseStructure.TIM_Period = 50000-1;
@@ -102,7 +218,7 @@ extern void timer1_IT_config(){
 	  /* (3) Enable interrupt on Capture/Compare */
 	  /* (4) TS the filtering input off channel 1, and put into reset mode*/
 	  /* (5) Enable counter */
-	  TIM1->CCMR1 |= TIM_CCMR1_CC2S_1 | TIM_CCMR1_CC1S_0 | TIM_CCMR1_IC1F_0 | TIM_CCMR1_IC1F_1; /* (1)*/
+	  TIM1->CCMR1 |= TIM_CCMR1_CC2S_1 | TIM_CCMR1_CC1S_0 | TIM_CCMR1_IC1F_0 | TIM_CCMR1_IC1F_1; /* (1) */
 	  TIM1->CCER |= TIM_CCER_CC1E | TIM_CCER_CC2E | TIM_CCER_CC2P; /* (2) */
 	  TIM1->DIER |= TIM_DIER_CC1IE; /* (3) */
 	  //TS 101: Filtered Timer Input 1 (TI1FP1)
@@ -118,6 +234,12 @@ extern void timer1_IT_config(){
 	   * This is used after the reset to determine the frequency and duty cycle
 	   */
 	  TIM1->CCER |= TIM_CCER_CC3E | TIM_CCER_CC4E | TIM_CCER_CC4P; // (2)
+}
+
+extern void pwm_in_init(){
+	timer1_IT_config();
+	timer2_IT_config();
+	timer15_IT_config();
 }
 
 extern void init_interrupt_based_pwm_in(){

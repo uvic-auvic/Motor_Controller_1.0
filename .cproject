@@ -48,6 +48,7 @@
 								<option id="fr.ac6.managedbuild.gnu.cpp.compiler.option.optimization.level.1913662505" name="Optimization Level" superClass="fr.ac6.managedbuild.gnu.cpp.compiler.option.optimization.level" useByScannerDiscovery="false"/>
 								<option id="gnu.cpp.compiler.option.debugging.level.1561775485" name="Debug Level" superClass="gnu.cpp.compiler.option.debugging.level" useByScannerDiscovery="false" value="gnu.cpp.compiler.debugging.level.max" valueType="enumerated"/>
 							</tool>
+
 							<tool id="fr.ac6.managedbuild.tool.gnu.cross.c.linker.1590667593" name="MCU GCC Linker" superClass="fr.ac6.managedbuild.tool.gnu.cross.c.linker">
 								<inputType id="cdt.managedbuild.tool.gnu.c.linker.input.1849450773" superClass="cdt.managedbuild.tool.gnu.c.linker.input">
 									<additionalInput kind="additionalinputdependency" paths="$(USER_OBJS)"/>
@@ -79,7 +80,9 @@
 					</sourceEntries>
 				</configuration>
 			</storageModule>
+
 			<storageModule moduleId="org.eclipse.cdt.core.externalSettings"/>
+
 		</cconfiguration>
 		<cconfiguration id="fr.ac6.managedbuild.config.gnu.cross.exe.release.1001758638">
 			<storageModule buildSystemId="org.eclipse.cdt.managedbuilder.core.configurationDataProvider" id="fr.ac6.managedbuild.config.gnu.cross.exe.release.1001758638" moduleId="org.eclipse.cdt.core.settings" name="Release">
