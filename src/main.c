@@ -113,19 +113,6 @@ main(int argc, char* argv[])
 	//timer_start();
 	//config_exti_A0_A1();
 
-	//initialize structs
-	GPIO_InitTypeDef GPIO_struct;
-
-	//initialize the LEDs
-	GPIO_struct.GPIO_Pin = GPIO_Pin_8;
-	GPIO_struct.GPIO_Mode = GPIO_Mode_AF;
-	GPIO_struct.GPIO_OType = GPIO_OType_PP;
-	GPIO_struct.GPIO_PuPd = GPIO_PuPd_NOPULL;
-	GPIO_struct.GPIO_Speed = GPIO_Speed_Level_3;
-	//GPIO_Init(GPIOA, &GPIO_struct);
-
-	//GPIO_PinAFConfig(GPIOA, GPIO_PinSource8, GPIO_AF_0);
-
 	vGeneralTaskInit();
 
 	/* Start the kernel.  From here on, only tasks and interrupts will run. */
