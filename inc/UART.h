@@ -8,18 +8,13 @@
 
 #include "stm32f0xx.h"
 #include "FSM.h"
+#include <stdbool.h>
 
 /* Public function prototypes -----------------------------------------------*/
-extern void Configure_GPIO_LED(void);
-extern void Configure_GPIO_USART1(void);
-extern void Configure_USART1(void);
+extern void UART_init();
 extern void UART_push_out(char* mesg);
-extern int check_UART_busy(void);
 // ----------------------------------------------------------------------------
 
-/* Private function prototypes -----------------------------------------------
-static void ResetCommBuffer(void);
-static void AppendToCommBuffer(char data);
 // --------------------------------------------------------------------------*/
 
 #endif // UART_Receiver_H_

@@ -19,7 +19,7 @@
 *.so
 *.so.*
 *.dylib
-*.ld
+#*.ld We comment this out to make it easier on ppl
 *.d
 
 # Executables
