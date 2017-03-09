@@ -4,10 +4,7 @@
 #include "stm32f0xx.h"
 #include "stm32f0xx_misc.h"
 
-#define SCALE (10000)
-#define NEUTRAL (900)
-#define FWD_MAX (1200)
-#define REV_MAX (600)
+
 
 extern void Motor_PWM(motor m, unsigned int percent_10000){
 	//int to uint_8 causes error

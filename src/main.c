@@ -52,6 +52,7 @@ void FSM(void *dummy){
 
 	//temporary storage to return from buffer
 	char commandString[MAX_BUFFER_SIZE] = "";
+	int tempVar;
 
 	while(1){
 		//it's important that this is while, if the task is accidentally awaken it
@@ -64,11 +65,25 @@ void FSM(void *dummy){
 		Buffer_pop(&inputBuffer, commandString);
 		char arguement = commandString[3];
 		commandString[3] = '\0';
-		if(strcmp(commandString, "VLT") == 0){
-			GPIOC->ODR ^= GPIO_ODR_9;
-		}
-		else if(strcmp(commandString, "M1F") == 0){
+		if(strcmp(commandString, "M1F") == 0){
 			Motor_Speed(motor1, ((unsigned int)(arguement)), Forward);
+		}
+		else if(strcmp(commandString, "M1R") == 0){
+			Motor_Speed(motor1, ((unsigned int)(arguement)), Reverse);
+		}
+		else if(strcmp(commandString, "RV1") == 0){
+			tempVar = read_frequency(motor1) / 4;
+			commandString[0] = (char)(tempVar | 0xFF);
+			commandString[1] = (char)((tempVar >> 8) | 0xFF);
+			commandString[2] = '\0';
+			UART_push_out(commandString);
+			UART_push_out("\r\n");
+		}
+		else if(strcmp(commandString, "SM1") == 0){
+			Motor_Speed(motor1, 0, Forward);
+		}
+		else if(strcmp(commandString, "STP") == 0){
+			Motors_Stop();
 		}
 		else{
 			UART_push_out("error: ");
