@@ -25,7 +25,11 @@ extern int read_duty_cycle_percent_10000(motor m){
 		high_clock_cycles = TIM1->CCR2;
 		break;
 	}
-	return ((high_clock_cycles * 10000) / total_clock_cycles); //The hundred is how percent work
+
+	// Make sure I don't divide by 0
+	if(total_clock_cycles)
+		return ((high_clock_cycles * 10000) / total_clock_cycles); //The hundred is how percent work
+	else return 0;
 }
 
 // Reads to the frequency of the PWM signal (Hz) of the specified motor
@@ -42,7 +46,11 @@ extern int read_frequency_hz(motor m){
 		period_clk_cycles = TIM1->CCR1;
 		break;
 	}
-	return CLOCK_PERIOD / period_clk_cycles;
+
+	// Make sure I don't divide by 0
+	if(period_clk_cycles)
+		return CLOCK_PERIOD / period_clk_cycles;
+	else return 0;
 }
 
 /* Configures the specified timer to capture a PWM input from the
