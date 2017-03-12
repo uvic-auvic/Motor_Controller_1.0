@@ -98,10 +98,7 @@ main(int argc, char* argv[])
 {
 
 	blink_led_init();
-
-
 	pwm_in_init();
-
 
 	//timer6_gen_system_clock_init();
 
