@@ -187,21 +187,25 @@ static void timer2_IT_config(){
 	NVIC_InitTypeDef NVIC_InitStructure;
 
 	/* GPIOA clock enable */
-	RCC_AHBPeriphClockCmd(RCC_AHBPeriph_GPIOA, ENABLE);
+	//RCC_AHBPeriphClockCmd(RCC_AHBPeriph_GPIOA, ENABLE);
+	RCC_AHBPeriphClockCmd(RCC_AHBPeriph_GPIOB, ENABLE); // Temporary switch to PB3
 
 	/* TIM2 clock enable */
 	RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM2, ENABLE);
 
 	/* GPIOA Configuration: TIM2 CH2 (PA1) */
-	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_1;
+	//GPIO_InitStructure.GPIO_Pin = GPIO_Pin_1;
+	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_3; // Temporary switch to PB3
 	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF; // Input/Output controlled by peripheral
 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
 	GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
 	GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_UP; // Button to ground expectation
-	GPIO_Init(GPIOA, &GPIO_InitStructure);
+	//GPIO_Init(GPIOA, &GPIO_InitStructure);
+	GPIO_Init(GPIOB, &GPIO_InitStructure); // Temporary switch to PB3
 
 	/* Connect TIM2 pins to AF */
-	GPIO_PinAFConfig(GPIOA, GPIO_PinSource1, GPIO_AF_2);
+	//GPIO_PinAFConfig(GPIOA, GPIO_PinSource1, GPIO_AF_2);
+	GPIO_PinAFConfig(GPIOB, GPIO_PinSource3, GPIO_AF_2); // Temporary switch to PB3
 
 	/* Enable the TIM2 interrupt from the interrupt table */
 	NVIC_InitStructure.NVIC_IRQChannel = TIM2_IRQn;

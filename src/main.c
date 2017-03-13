@@ -85,14 +85,14 @@ void measureTask(void* dummy){
 		vTaskDelay(1000);
 
 		// Read the duty cycle
-		dc15 = read_duty_cycle(motor1);
-		dc2 = read_duty_cycle(motor2);
-		dc1 = read_duty_cycle(motor3);
+		dc15 = read_duty_cycle_percent_10000(motor1);
+		dc2 = read_duty_cycle_percent_10000(motor2);
+		dc1 = read_duty_cycle_percent_10000(motor3);
 
 		// Read the period
-		f15 = read_frequency(motor1);
-		f2 = read_frequency(motor2);
-		f1 = read_frequency(motor3);
+		f15 = read_frequency_hz(motor1);
+		f2 = read_frequency_hz(motor2);
+		f1 = read_frequency_hz(motor3);
 
 		// Put a breakpoint there
 		vTaskDelay(1);
