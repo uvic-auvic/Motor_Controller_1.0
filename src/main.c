@@ -78,6 +78,27 @@ void FSM(void *dummy){
 	}
 }
 
+void measureTask(void* dummy){
+	int dc1, dc2, dc15, f1, f2, f15;
+	while(1){
+		// Delay 1 seconds
+		vTaskDelay(1000);
+
+		// Read the duty cycle
+		dc15 = read_duty_cycle(motor1);
+		dc2 = read_duty_cycle(motor2);
+		dc1 = read_duty_cycle(motor3);
+
+		// Read the period
+		f15 = read_frequency(motor1);
+		f2 = read_frequency(motor2);
+		f1 = read_frequency(motor3);
+
+		// Put a breakpoint there
+		vTaskDelay(1);
+	}
+}
+
 void vGeneralTaskInit(void){
     xTaskCreate(blinkyTask,
 		(const signed char *)"blinkyTask",
@@ -91,6 +112,13 @@ void vGeneralTaskInit(void){
 		NULL,                 // pvParameters
 		tskIDLE_PRIORITY + 1, // uxPriority
 		NULL              ); // pvCreatedTask */
+
+    xTaskCreate(measureTask,
+    	(const signed char*)"measureTask",
+		configMINIMAL_STACK_SIZE,
+		NULL,
+		tskIDLE_PRIORITY + 1,
+		NULL			  );
 }
 
 int
