@@ -71,10 +71,14 @@ void FSM(void *dummy){
 		else if(strcmp(commandString, "M1R") == 0){
 			Motor_Speed(motor1, ((unsigned int)(arguement)), Reverse);
 		}
+		//Commented out because it's not tested
+		/*else if(strcmp(commandString, "PW1") == 0){
+			Motor_PWM(motor1, ((unsigned int)(arguement)* (10000 / 255)));
+		}*/
 		else if(strcmp(commandString, "RV1") == 0){
 			tempVar = read_frequency(motor1) / 4;
-			commandString[0] = (char)(tempVar | 0xFF);
-			commandString[1] = (char)((tempVar >> 8) | 0xFF);
+			commandString[0] = (char)(tempVar & 0xFF);
+			commandString[1] = (char)((tempVar >> 8) & 0xFF);
 			commandString[2] = '\0';
 			UART_push_out(commandString);
 			UART_push_out("\r\n");
@@ -84,6 +88,10 @@ void FSM(void *dummy){
 		}
 		else if(strcmp(commandString, "STP") == 0){
 			Motors_Stop();
+		}else if(strcmp(commandString, "RID") == 0){
+			UART_push_out("Motor ");
+			UART_push_out("Control");
+			UART_push_out("ler\r\n");
 		}
 		else{
 			UART_push_out("error: ");
