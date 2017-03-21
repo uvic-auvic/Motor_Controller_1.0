@@ -65,6 +65,9 @@ void FSM(void *dummy){
 		Buffer_pop(&inputBuffer, commandString);
 		char arguement = commandString[3];
 		commandString[3] = '\0';
+
+		char tempOutputString[MAX_BUFFER_SIZE] = "";
+
 		if(strcmp(commandString, "M1F") == 0){
 			Motor_Speed(motor1, ((unsigned int)(arguement)), Forward);
 		}
@@ -76,12 +79,49 @@ void FSM(void *dummy){
 			Motor_PWM(motor1, ((unsigned int)(arguement)* (10000 / 255)));
 		}*/
 		else if(strcmp(commandString, "RV1") == 0){
-			tempVar = read_frequency(motor1) / 4;
-			commandString[0] = (char)(tempVar & 0xFF);
-			commandString[1] = (char)((tempVar >> 8) & 0xFF);
-			commandString[2] = '\0';
-			UART_push_out(commandString);
-			UART_push_out("\r\n");
+			tempVar = read_frequency(motor1) / CYCLES_PER_REV;
+			tempOutputString[0] = (char)(tempVar & 0xFF);
+			tempOutputString[1] = (char)((tempVar >> 8) & 0xFF);
+			tempOutputString[2] = '\r';
+			tempOutputString[3] = '\n';
+			tempOutputString[4] = '\0';
+			UART_push_out(tempOutputString);
+		}else if(strcmp(commandString, "RVA") == 0){
+			tempVar = read_frequency(motor1) / CYCLES_PER_REV;
+			tempOutputString[0] = '(';
+			tempOutputString[1] = (char)(tempVar & 0xFF);
+			tempOutputString[2] = (char)((tempVar >> 8) & 0xFF);
+			tempOutputString[3] = '\0';
+			UART_push_out(tempOutputString);
+
+			tempOutputString[0] = ')';
+			tempOutputString[1] = '(';
+
+			tempVar = read_frequency(motor2) / CYCLES_PER_REV;
+			tempOutputString[2] = (char)(tempVar & 0xFF);
+			tempOutputString[3] = (char)((tempVar >> 8) & 0xFF);
+			tempOutputString[4] = '\0';
+
+			UART_push_out(tempOutputString);
+
+			tempOutputString[0] = ')';
+			tempOutputString[1] = '(';
+
+			tempVar = read_frequency(motor3) / CYCLES_PER_REV;
+
+			tempOutputString[2] = (char)(tempVar & 0xFF);
+			tempOutputString[3] = (char)((tempVar >> 8) & 0xFF);
+			tempOutputString[4] = '\0';
+
+			UART_push_out(tempOutputString);
+
+			tempOutputString[0] = ')';
+			tempOutputString[1] = '\r';
+			tempOutputString[2] = '\n';
+			tempOutputString[3] = '\0';
+
+			UART_push_out(tempOutputString);
+
 		}
 		else if(strcmp(commandString, "SM1") == 0){
 			Motor_Speed(motor1, 0, Forward);
