@@ -11,9 +11,7 @@
 
 //Public functions
 extern void pwm_in_init(void);
-extern int read_duty_cycle(motor m);
-extern int read_frequency(motor m);
-extern int read_revolutions(motor m);
-extern void config_exti_A0_A1(void);
+extern int read_duty_cycle_percent_1000(motor m);
+extern int read_frequency_hz(motor m);
 
 #endif
