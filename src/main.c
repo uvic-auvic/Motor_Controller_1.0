@@ -79,7 +79,7 @@ void FSM(void *dummy){
 			Motor_PWM(motor1, ((unsigned int)(arguement)* (10000 / 255)));
 		}*/
 		else if(strcmp(commandString, "RV1") == 0){
-			tempVar = read_frequency(motor1) / CYCLES_PER_REV;
+			tempVar = read_frequency_hz(motor1) / CYCLES_PER_REV;
 			tempOutputString[0] = (char)(tempVar & 0xFF);
 			tempOutputString[1] = (char)((tempVar >> 8) & 0xFF);
 			tempOutputString[2] = '\r';
@@ -87,7 +87,7 @@ void FSM(void *dummy){
 			tempOutputString[4] = '\0';
 			UART_push_out(tempOutputString);
 		}else if(strcmp(commandString, "RVA") == 0){
-			tempVar = read_frequency(motor1) / CYCLES_PER_REV;
+			tempVar = read_frequency_hz(motor1) / CYCLES_PER_REV;
 			tempOutputString[0] = '(';
 			tempOutputString[1] = (char)(tempVar & 0xFF);
 			tempOutputString[2] = (char)((tempVar >> 8) & 0xFF);
@@ -97,7 +97,7 @@ void FSM(void *dummy){
 			tempOutputString[0] = ')';
 			tempOutputString[1] = '(';
 
-			tempVar = read_frequency(motor2) / CYCLES_PER_REV;
+			tempVar = read_frequency_hz(motor2) / CYCLES_PER_REV;
 			tempOutputString[2] = (char)(tempVar & 0xFF);
 			tempOutputString[3] = (char)((tempVar >> 8) & 0xFF);
 			tempOutputString[4] = '\0';
@@ -107,7 +107,7 @@ void FSM(void *dummy){
 			tempOutputString[0] = ')';
 			tempOutputString[1] = '(';
 
-			tempVar = read_frequency(motor3) / CYCLES_PER_REV;
+			tempVar = read_frequency_hz(motor3) / CYCLES_PER_REV;
 
 			tempOutputString[2] = (char)(tempVar & 0xFF);
 			tempOutputString[3] = (char)((tempVar >> 8) & 0xFF);
