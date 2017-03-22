@@ -161,10 +161,7 @@ main(int argc, char* argv[])
 {
 
 	blink_led_init();
-
-
 	pwm_in_init();
-
 
 	//timer6_gen_system_clock_init();
 
@@ -183,19 +180,6 @@ main(int argc, char* argv[])
 
 	// Should never get here
 	while (1);
-}
-
-void EXTI0_1_IRQHandler(void)
-{
-	if((EXTI->PR & EXTI_PR_PR0) == EXTI_PR_PR0){
-		motor_pulse(motor2);
-		GPIOC->ODR |= GPIO_ODR_8; /* turn on blue LED */
-		EXTI->PR |= EXTI_PR_PR0;
-	}
-	if((EXTI->PR & EXTI_PR_PR1) == EXTI_PR_PR1){
-		GPIOC->ODR &= ~(GPIO_ODR_8); /* turn off blue LED */
-		EXTI->PR |= EXTI_PR_PR1;
-	}
 }
 
 #pragma GCC diagnostic pop
