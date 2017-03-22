@@ -52,6 +52,7 @@ void FSM(void *dummy){
 
 	//temporary storage to return from buffer
 	char commandString[MAX_BUFFER_SIZE] = "";
+	int tempVar;
 
 	while(1){
 		//it's important that this is while, if the task is accidentally awaken it
@@ -64,11 +65,73 @@ void FSM(void *dummy){
 		Buffer_pop(&inputBuffer, commandString);
 		char arguement = commandString[3];
 		commandString[3] = '\0';
-		if(strcmp(commandString, "VLT") == 0){
-			GPIOC->ODR ^= GPIO_ODR_9;
-		}
-		else if(strcmp(commandString, "M1F") == 0){
+
+		char tempOutputString[MAX_BUFFER_SIZE] = "";
+
+		if(strcmp(commandString, "M1F") == 0){
 			Motor_Speed(motor1, ((unsigned int)(arguement)), Forward);
+		}
+		else if(strcmp(commandString, "M1R") == 0){
+			Motor_Speed(motor1, ((unsigned int)(arguement)), Reverse);
+		}
+		//Commented out because it's not tested
+		/*else if(strcmp(commandString, "PW1") == 0){
+			Motor_PWM(motor1, ((unsigned int)(arguement)* (10000 / 255)));
+		}*/
+		else if(strcmp(commandString, "RV1") == 0){
+			tempVar = read_frequency(motor1) / CYCLES_PER_REV;
+			tempOutputString[0] = (char)(tempVar & 0xFF);
+			tempOutputString[1] = (char)((tempVar >> 8) & 0xFF);
+			tempOutputString[2] = '\r';
+			tempOutputString[3] = '\n';
+			tempOutputString[4] = '\0';
+			UART_push_out(tempOutputString);
+		}else if(strcmp(commandString, "RVA") == 0){
+			tempVar = read_frequency(motor1) / CYCLES_PER_REV;
+			tempOutputString[0] = '(';
+			tempOutputString[1] = (char)(tempVar & 0xFF);
+			tempOutputString[2] = (char)((tempVar >> 8) & 0xFF);
+			tempOutputString[3] = '\0';
+			UART_push_out(tempOutputString);
+
+			tempOutputString[0] = ')';
+			tempOutputString[1] = '(';
+
+			tempVar = read_frequency(motor2) / CYCLES_PER_REV;
+			tempOutputString[2] = (char)(tempVar & 0xFF);
+			tempOutputString[3] = (char)((tempVar >> 8) & 0xFF);
+			tempOutputString[4] = '\0';
+
+			UART_push_out(tempOutputString);
+
+			tempOutputString[0] = ')';
+			tempOutputString[1] = '(';
+
+			tempVar = read_frequency(motor3) / CYCLES_PER_REV;
+
+			tempOutputString[2] = (char)(tempVar & 0xFF);
+			tempOutputString[3] = (char)((tempVar >> 8) & 0xFF);
+			tempOutputString[4] = '\0';
+
+			UART_push_out(tempOutputString);
+
+			tempOutputString[0] = ')';
+			tempOutputString[1] = '\r';
+			tempOutputString[2] = '\n';
+			tempOutputString[3] = '\0';
+
+			UART_push_out(tempOutputString);
+
+		}
+		else if(strcmp(commandString, "SM1") == 0){
+			Motor_Speed(motor1, 0, Forward);
+		}
+		else if(strcmp(commandString, "STP") == 0){
+			Motors_Stop();
+		}else if(strcmp(commandString, "RID") == 0){
+			UART_push_out("Motor ");
+			UART_push_out("Control");
+			UART_push_out("ler\r\n");
 		}
 		else{
 			UART_push_out("error: ");
@@ -109,19 +172,6 @@ main(int argc, char* argv[])
 	Motors_init();
 	//timer_start();
 	//config_exti_A0_A1();
-
-	//initialize structs
-	GPIO_InitTypeDef GPIO_struct;
-
-	//initialize the LEDs
-	GPIO_struct.GPIO_Pin = GPIO_Pin_8;
-	GPIO_struct.GPIO_Mode = GPIO_Mode_AF;
-	GPIO_struct.GPIO_OType = GPIO_OType_PP;
-	GPIO_struct.GPIO_PuPd = GPIO_PuPd_NOPULL;
-	GPIO_struct.GPIO_Speed = GPIO_Speed_Level_3;
-	//GPIO_Init(GPIOA, &GPIO_struct);
-
-	//GPIO_PinAFConfig(GPIOA, GPIO_PinSource8, GPIO_AF_0);
 
 	vGeneralTaskInit();
 
