@@ -15,7 +15,7 @@
 
 extern void FSM(void *dummy){
 	//initialize the FSM and UART
-	FSM_Init();
+	//FSM_Init();
 	UART_init();
 
 	inputBuffer.size = 0;
@@ -63,37 +63,30 @@ extern void FSM(void *dummy){
 				tempOutputString[0] = '(';
 				tempOutputString[1] = (char)(tempVar & 0xFF);
 				tempOutputString[2] = (char)((tempVar >> 8) & 0xFF);
-				tempOutputString[3] = '\0';
+				tempOutputString[3] = ')';
+				tempOutputString[4] = '\0';
 				UART_push_out(tempOutputString);
-
-				// Formating to separate the readings
-				tempOutputString[0] = ')';
-				tempOutputString[1] = '(';
 
 				// Find rev/s for motor2
 				tempVar = read_frequency_hz(motor2) / CYCLES_PER_REV;
-				tempOutputString[2] = (char)(tempVar & 0xFF);
-				tempOutputString[3] = (char)((tempVar >> 8) & 0xFF);
+				tempOutputString[0] = '(';
+				tempOutputString[1] = (char)(tempVar & 0xFF);
+				tempOutputString[2] = (char)((tempVar >> 8) & 0xFF);
+				tempOutputString[3] = ')';
 				tempOutputString[4] = '\0';
 				UART_push_out(tempOutputString);
-
-				// Formating to separate the readings
-				tempOutputString[0] = ')';
-				tempOutputString[1] = '(';
 
 				// Find rev/s for motor3
 				tempVar = read_frequency_hz(motor3) / CYCLES_PER_REV;
-				tempOutputString[2] = (char)(tempVar & 0xFF);
-				tempOutputString[3] = (char)((tempVar >> 8) & 0xFF);
+				tempOutputString[0] = '(';
+				tempOutputString[1] = (char)(tempVar & 0xFF);
+				tempOutputString[2] = (char)((tempVar >> 8) & 0xFF);
+				tempOutputString[3] = ')';
 				tempOutputString[4] = '\0';
-				UART_push_out(tempOutputString);
-
-				// Formating to separate the readings
-				tempOutputString[0] = ')';
 				UART_push_out(tempOutputString);
 			}
 			else{
-				// Convert char to int ('0' is 48 in ASCII)
+				// Convert char to int to get the required motor ('0' is 48 in ASCII)
 				int motor = commandString[2] - CHAR_TO_INT - 1; // zero based
 
 				// Determine the rev/s
@@ -104,6 +97,7 @@ extern void FSM(void *dummy){
 				UART_push_out(tempOutputString);
 			}
 
+			// For RVx command, we always reach here
 			// Setup end of command
 			tempOutputString[0] = '\r';
 			tempOutputString[1] = '\n';
@@ -113,11 +107,14 @@ extern void FSM(void *dummy){
 		// SMx command
 		else if(strncmp(commandString, "SM", 2) == 0){
 			int motor = commandString[2] - CHAR_TO_INT - 1; // zero based
-			Motor_Speed(motor, 0, Forward);
+			if(motor >= motor1 && motor <= motor3){
+				// Stop motor
+				Motor_Speed(motor, 0, Forward);
 
-			// Send ACK
-			strcpy(tempOutputString, "ACK\r\n\0");
-			UART_push_out(tempOutputString);
+				// Send ACK
+				strcpy(tempOutputString, "ACK\r\n\0");
+				UART_push_out(tempOutputString);
+			}
 		}
 		else if(strcmp(commandString, "STP") == 0){
 			Motors_Stop();

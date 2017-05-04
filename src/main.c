@@ -39,7 +39,7 @@ void blinkyTask(void *dummy){
 		GPIOC->ODR ^= GPIO_ODR_9;
 		GPIOA->ODR ^= GPIO_ODR_3;
 		/* maintain LED C9 status for 200ms */
-		vTaskDelay(500);
+		vTaskDelay(200);
 	}
 }
 
@@ -70,6 +70,7 @@ main(int argc, char* argv[])
 	//config_exti_A0_A1();
 
 	vGeneralTaskInit();
+	FSM_Init();
 
 	/* Start the kernel.  From here on, only tasks and interrupts will run. */
 	vTaskStartScheduler();
