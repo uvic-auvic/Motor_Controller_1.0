@@ -93,7 +93,7 @@ void setup()
 
 void loop()
 {
-  char str[20] = {
+  char str[20] = { 
     0    };
   signed int temp_data = 0;                    //LM75B
   double temp = 0.0;
