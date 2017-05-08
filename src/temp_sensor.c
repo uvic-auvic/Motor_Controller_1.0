@@ -15,7 +15,7 @@
 #include "Timer.h"
 
 
-int main()
+int setup()
 {
 	// Create I2C bus
 	int file;
