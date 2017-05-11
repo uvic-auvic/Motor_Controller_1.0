@@ -21,7 +21,7 @@
 /* Private variables ---------------------------------------------------------*/
 TaskHandle_t UARTTaskToNotify = NULL;
 
-static uint8_t bytes_to_send = 0;
+uint8_t bytes_to_send = 0;
 char stringtosend[MAX_OUPUT_DATA] = "";
 
 char chars_recv[MAX_COMMAND_LENGTH] = ""; //Using for storing the previous portion of the command
