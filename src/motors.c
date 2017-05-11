@@ -18,7 +18,7 @@ static void vSafetyStopTimerCallback( TimerHandle_t *pxTimer )
 static void software_timer_config(void){
 	xSafetyStopTimer = xTimerCreate(
 			"SafetyStopTimer",			/* Just a name */
-			5000 / portTICK_RATE_MS,	/* Configure timer for 5 seconds */
+			15000 / portTICK_RATE_MS,	/* Configure timer for 5 seconds */
 			pdFALSE,					/* Disable auto-reload */
 			(void *)timer_id,			/* Unique timer identifier */
 			vSafetyStopTimerCallback);	/* Specify callback function */

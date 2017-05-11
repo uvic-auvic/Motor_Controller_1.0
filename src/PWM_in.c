@@ -40,10 +40,10 @@ extern int read_frequency_hz(motor m){
 		period_clk_cycles = TIM15->CCR1;
 		break;
 	case motor2:
-		period_clk_cycles = TIM2->CCR2;
+		period_clk_cycles = TIM1->CCR1;
 		break;
 	case motor3:
-		period_clk_cycles = TIM1->CCR1;
+		period_clk_cycles = TIM2->CCR2;
 		break;
 	}
 
