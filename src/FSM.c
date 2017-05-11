@@ -64,8 +64,7 @@ extern void FSM(void *dummy){
 				tempOutputString[1] = (char)(tempVar & 0xFF);
 				tempOutputString[2] = (char)((tempVar >> 8) & 0xFF);
 				tempOutputString[3] = ')';
-				tempOutputString[4] = '\0';
-				UART_push_out(tempOutputString);
+				UART_push_out_len(tempOutputString, 4);
 
 				// Find rev/s for motor2
 				tempVar = read_frequency_hz(motor2) / CYCLES_PER_REV;
@@ -73,8 +72,7 @@ extern void FSM(void *dummy){
 				tempOutputString[1] = (char)(tempVar & 0xFF);
 				tempOutputString[2] = (char)((tempVar >> 8) & 0xFF);
 				tempOutputString[3] = ')';
-				tempOutputString[4] = '\0';
-				UART_push_out(tempOutputString);
+				UART_push_out_len(tempOutputString, 4);
 
 				// Find rev/s for motor3
 				tempVar = read_frequency_hz(motor3) / CYCLES_PER_REV;
@@ -82,8 +80,7 @@ extern void FSM(void *dummy){
 				tempOutputString[1] = (char)(tempVar & 0xFF);
 				tempOutputString[2] = (char)((tempVar >> 8) & 0xFF);
 				tempOutputString[3] = ')';
-				tempOutputString[4] = '\0';
-				UART_push_out(tempOutputString);
+				UART_push_out_len(tempOutputString, 4);
 			}
 			else{
 				// Convert char to int to get the required motor ('0' is 48 in ASCII)
@@ -93,8 +90,7 @@ extern void FSM(void *dummy){
 				tempVar = read_frequency_hz(motor) / CYCLES_PER_REV;
 				tempOutputString[0] = (char)(tempVar & 0xFF);
 				tempOutputString[1] = (char)((tempVar >> 8) & 0xFF);
-				tempOutputString[2] = '\0';
-				UART_push_out(tempOutputString);
+				UART_push_out_len(tempOutputString, 2);
 			}
 
 			// For RVx command, we always reach here
@@ -112,7 +108,7 @@ extern void FSM(void *dummy){
 				Motor_Speed(motor, 0, Forward);
 
 				// Send ACK
-				strcpy(tempOutputString, "ACK\r\n\0");
+				strcpy(tempOutputString, "ACK\r\n");
 				UART_push_out(tempOutputString);
 			}
 		}
@@ -120,7 +116,7 @@ extern void FSM(void *dummy){
 			Motors_Stop();
 
 			// Send ACK
-			strcpy(tempOutputString, "ACK\r\n\0");
+			strcpy(tempOutputString, "ACK\r\n");
 			UART_push_out(tempOutputString);
 		}
 		else if(strcmp(commandString, "RID") == 0){

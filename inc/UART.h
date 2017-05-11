@@ -13,6 +13,7 @@
 /* Public function prototypes -----------------------------------------------*/
 extern void UART_init();
 extern void UART_push_out(char* mesg);
+extern void UART_push_out_len(char* mesg, int len);
 // ----------------------------------------------------------------------------
 
 // --------------------------------------------------------------------------*/

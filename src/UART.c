@@ -21,7 +21,7 @@
 /* Private variables ---------------------------------------------------------*/
 TaskHandle_t UARTTaskToNotify = NULL;
 
-bool output_transfer_in_progress;
+static uint8_t bytes_to_send = 0;
 char stringtosend[MAX_OUPUT_DATA] = "";
 
 char chars_recv[MAX_COMMAND_LENGTH] = ""; //Using for storing the previous portion of the command
@@ -102,8 +102,6 @@ extern void UART_init(){
 	/* Store the handle of the calling task. */
 	UARTTaskToNotify = xTaskGetCurrentTaskHandle();
 
-	output_transfer_in_progress = false;
-
 	Buffer_init(&outputBuffer);
 
 	//initialize the UART driver
@@ -120,7 +118,7 @@ static void new_char_recv(char chartoreceive){
 			//Send_to_Odroid("tiny\r\n");
 		}else{
 			// Step 1 add to the input buffer
-			Buffer_add(&inputBuffer, chars_recv);
+			Buffer_add(&inputBuffer, chars_recv, strlen(chars_recv));
 
 			// Step 2 is notify the FSM task that the buffer is no longer empty
 			/* At this point xTaskToNotify should not be NULL as a transmission was
@@ -169,17 +167,16 @@ void USART1_IRQHandler(void)
     {
 	  //The reason why we update the output_idx before code is because this happens
 	  //after the first transfer is complete as the first transfer is loaded in else where
+	  bytes_to_send--;
 	  output_idx++;
-      if(stringtosend[output_idx] == '\0')
+      if(bytes_to_send == 0)
       {
         USART1->ICR |= USART_ICR_TCCF; /* Clear transfer complete flag */
         output_idx = 0;
         //if the buffer is not empty pop the next item off and keep going
         if(outputBuffer.size != 0){
-        	Buffer_pop(&outputBuffer, stringtosend);
+        	bytes_to_send = Buffer_pop(&outputBuffer, stringtosend);
         	USART1->TDR = stringtosend[0]; /* Will initialize TC if TXE */
-        }else{
-        	output_transfer_in_progress = false;
         }
       }
       else
@@ -201,12 +198,24 @@ void USART1_IRQHandler(void)
 }
 
 extern void UART_push_out(char* mesg){
-	if(output_transfer_in_progress){
-		Buffer_add(&outputBuffer, mesg);
+	if(bytes_to_send > 0){
+		Buffer_add(&outputBuffer, mesg, strlen(mesg));
 	}
 	else{
-		output_transfer_in_progress = true;
+		bytes_to_send = strlen(mesg);
 		strcpy(stringtosend, mesg);
+		/* start USART transmission */
+		USART1->TDR = stringtosend[0]; /* Will initialize TC if TXE */
+	}
+}
+
+extern void UART_push_out_len(char* mesg, int len){
+	if(bytes_to_send > 0){
+		Buffer_add(&outputBuffer, mesg, len);
+	}
+	else{
+		bytes_to_send = len;
+		memcpy(stringtosend, mesg, len);
 		/* start USART transmission */
 		USART1->TDR = stringtosend[0]; /* Will initialize TC if TXE */
 	}

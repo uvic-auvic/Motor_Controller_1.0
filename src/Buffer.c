@@ -5,9 +5,10 @@
 
 // Adds an element to the end of the queue
 //  - str (the element) must be NULL terminated ('\0') for strcpy
-extern void Buffer_add(Buffer* b, const char* str){
+extern void Buffer_add(Buffer* b, const char* str, uint8_t len){
 	// Insert element
-	strcpy(b->data[b->idx_to_load], str);
+	memcpy(b->data[b->idx_to_load], str, len);
+	b->data_len[b->idx_to_load] = len;
 	b->idx_to_load++;
 	b->idx_to_load %= MAX_BUFFER_SIZE;
 	b->size++;
@@ -24,16 +25,21 @@ extern void Buffer_add(Buffer* b, const char* str){
 }
 
 // Removes an element from the front of the queue
-extern void Buffer_pop(Buffer* b, char* data) {
+extern int Buffer_pop(Buffer* b, char* data) {
+	uint8_t ret = 0;
+
 	// Check if the buffer has anything to pop
 	if(b->size)
 	{
 		// Pop oldest element and store it in data
-		strcpy(data, b->data[b->idx_to_pop]);
+		memcpy(data, b->data[b->idx_to_pop], b->data_len[b->idx_to_pop]);
+		ret = b->data_len[b->idx_to_pop];
 		b->idx_to_pop++;
 		b->idx_to_pop %= MAX_BUFFER_SIZE;
 		b->size--;
 	}
+
+	return ret;
 }
 
 // Reset all variables of the buffer

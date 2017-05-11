@@ -39,7 +39,7 @@ void blinkyTask(void *dummy){
 		GPIOC->ODR ^= GPIO_ODR_9;
 		GPIOA->ODR ^= GPIO_ODR_3;
 		/* maintain LED C9 status for 200ms */
-		vTaskDelay(200);
+		vTaskDelay(500);
 	}
 }
 
