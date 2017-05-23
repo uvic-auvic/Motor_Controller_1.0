@@ -21,6 +21,8 @@
 #include "stm32f0xx_exti.h"
 #include "stm32f0xx_syscfg.h"
 #include "PWM_in.h"
+#include "I2C.h"
+#include "temp_sensor.h"
 
 #include "FreeRTOSConfig.h"
 
@@ -94,24 +96,30 @@ void FSM(void *dummy){
 }
 
 void vGeneralTaskInit(void){
-    xTaskCreate(blinkyTask,
+	xTaskCreate(tempUpdates,
+			(const signed char *)"tempUpdates",
+			configMINIMAL_STACK_SIZE,
+			NULL,                 // pvParameters
+			tskIDLE_PRIORITY + 1, // uxPriority
+			NULL              ); // pvCreatedTask */
+	xTaskCreate(blinkyTask,
 		(const signed char *)"blinkyTask",
 		configMINIMAL_STACK_SIZE,
 		NULL,                 // pvParameters
 		tskIDLE_PRIORITY + 1, // uxPriority
 		NULL              ); // pvCreatedTask */
-    xTaskCreate(FSM,
-		(const signed char *)"FSM",
-		configMINIMAL_STACK_SIZE,
-		NULL,                 // pvParameters
-		tskIDLE_PRIORITY + 1, // uxPriority
-		NULL              ); // pvCreatedTask */
+//    xTaskCreate(FSM,
+//		(const signed char *)"FSM",
+//		configMINIMAL_STACK_SIZE,
+//		NULL,                 // pvParameters
+//		tskIDLE_PRIORITY + 1, // uxPriority
+//		NULL              ); // pvCreatedTask */
 }
 
 int
 main(int argc, char* argv[])
 {
-
+	i2c_Init();
 	blink_led_init();
 
 
