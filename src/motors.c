@@ -3,30 +3,25 @@
 //#include "cortexm/ExceptionHandlers.h"
 #include "stm32f0xx.h"
 #include "stm32f0xx_misc.h"
+#include "FreeRTOS.h"
+#include "timers.h"
 
+static xTimerHandle xSafetyStopTimer;
+static const long timer_id = 0xFAFA;
 
-
-extern void Motor_PWM(motor m, unsigned int percent_10000){
-	//int to uint_8 causes error
-	if(percent_10000 == 0){
-		percent_10000 = 1;
-	}
-	switch(m){
-	case (motor1):
-		TIM3->CCR3 = percent_10000 -1;
-		break;
-	case (motor2):
-		TIM3->CCR2 = percent_10000 -1;
-		break;
-	case (motor3):
-		TIM3->CCR1 = percent_10000 - 1;
-		break;
-	}
+static void vSafetyStopTimerCallback( TimerHandle_t *pxTimer )
+{
+	if( (long)pvTimerGetTimerID(pxTimer) == timer_id)
+		Motors_Stop();
 }
 
-extern void Motor_Speed(motor m, unsigned int percent_10000, motor_direction dir){
-	int speed = NEUTRAL + dir * percent_10000;
-	Motor_PWM(m, speed);
+static void software_timer_config(void){
+	xSafetyStopTimer = xTimerCreate(
+			"SafetyStopTimer",			/* Just a name */
+			15000 / portTICK_RATE_MS,	/* Configure timer for 5 seconds */
+			pdFALSE,					/* Disable auto-reload */
+			(void *)timer_id,			/* Unique timer identifier */
+			vSafetyStopTimerCallback);	/* Specify callback function */
 }
 
 static void timer3_it_config(void){
@@ -83,6 +78,32 @@ static void timer3_it_config(void){
 	TIM_Cmd(TIM3, ENABLE);
 }
 
+extern void Motor_PWM(motor m, unsigned int percent_10000){
+	//int to uint_8 causes error
+	if(percent_10000 == 0){
+		percent_10000 = 1;
+	}
+	switch(m){
+	case (motor1):
+		TIM3->CCR3 = percent_10000 -1;
+		break;
+	case (motor2):
+		TIM3->CCR2 = percent_10000 -1;
+		break;
+	case (motor3):
+		TIM3->CCR1 = percent_10000 - 1;
+		break;
+	}
+}
+
+extern void Motor_Speed(motor m, unsigned int percent_10000, motor_direction dir){
+	int speed = NEUTRAL + dir * percent_10000;
+	Motor_PWM(m, speed);
+
+	/* Start timer. If expires, motors will stop */
+	xTimerReset(xSafetyStopTimer, 100);
+}
+
 extern void Motors_Stop(void){
 	Motor_PWM(motor1, NEUTRAL);
 	Motor_PWM(motor2, NEUTRAL);
@@ -91,6 +112,7 @@ extern void Motors_Stop(void){
 
 extern void Motors_init(void){
 	timer3_it_config();
+	software_timer_config();
 	Motor_PWM(motor1, NEUTRAL);
 	Motor_PWM(motor2, NEUTRAL);
 	Motor_PWM(motor3, NEUTRAL);

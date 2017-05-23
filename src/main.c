@@ -45,56 +45,6 @@ void blinkyTask(void *dummy){
 	}
 }
 
-void FSM(void *dummy){
-	//initialize the FSM and UART
-	FSM_Init();
-	UART_init();
-
-	inputBuffer.size = 0;
-
-	//temporary storage to return from buffer
-	char commandString[MAX_BUFFER_SIZE] = "";
-	int tempVar;
-
-	while(1){
-		//it's important that this is while, if the task is accidentally awaken it
-		//can't execute without having at least one item the input puffer
-		while(inputBuffer.size == 0){
-			//sleeps the task into it is notified to continue
-			ulTaskNotifyTake( pdTRUE, portMAX_DELAY );
-		}
-		//Write a statement here to do a string comparison on commands
-		Buffer_pop(&inputBuffer, commandString);
-		char arguement = commandString[3];
-		commandString[3] = '\0';
-		if(strcmp(commandString, "M1F") == 0){
-			Motor_Speed(motor1, ((unsigned int)(arguement)), Forward);
-		}
-		else if(strcmp(commandString, "M1R") == 0){
-			Motor_Speed(motor1, ((unsigned int)(arguement)), Reverse);
-		}
-		else if(strcmp(commandString, "RV1") == 0){
-			tempVar = read_frequency(motor1) / 4;
-			commandString[0] = (char)(tempVar | 0xFF);
-			commandString[1] = (char)((tempVar >> 8) | 0xFF);
-			commandString[2] = '\0';
-			UART_push_out(commandString);
-			UART_push_out("\r\n");
-		}
-		else if(strcmp(commandString, "SM1") == 0){
-			Motor_Speed(motor1, 0, Forward);
-		}
-		else if(strcmp(commandString, "STP") == 0){
-			Motors_Stop();
-		}
-		else{
-			UART_push_out("error: ");
-			UART_push_out(commandString);
-			UART_push_out("\r\n");
-		}
-	}
-}
-
 void vGeneralTaskInit(void){
 	xTaskCreate(tempUpdates,
 			(const signed char *)"tempUpdates",
@@ -114,6 +64,7 @@ void vGeneralTaskInit(void){
 //		NULL,                 // pvParameters
 //		tskIDLE_PRIORITY + 1, // uxPriority
 //		NULL              ); // pvCreatedTask */
+
 }
 
 int
@@ -121,10 +72,7 @@ main(int argc, char* argv[])
 {
 	i2c_Init();
 	blink_led_init();
-
-
 	pwm_in_init();
-
 
 	//timer6_gen_system_clock_init();
 
@@ -137,25 +85,13 @@ main(int argc, char* argv[])
 	//config_exti_A0_A1();
 
 	vGeneralTaskInit();
+	FSM_Init();
 
 	/* Start the kernel.  From here on, only tasks and interrupts will run. */
 	vTaskStartScheduler();
 
 	// Should never get here
 	while (1);
-}
-
-void EXTI0_1_IRQHandler(void)
-{
-	if((EXTI->PR & EXTI_PR_PR0) == EXTI_PR_PR0){
-		motor_pulse(motor2);
-		GPIOC->ODR |= GPIO_ODR_8; /* turn on blue LED */
-		EXTI->PR |= EXTI_PR_PR0;
-	}
-	if((EXTI->PR & EXTI_PR_PR1) == EXTI_PR_PR1){
-		GPIOC->ODR &= ~(GPIO_ODR_8); /* turn off blue LED */
-		EXTI->PR |= EXTI_PR_PR1;
-	}
 }
 
 #pragma GCC diagnostic pop

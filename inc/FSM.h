@@ -10,6 +10,7 @@ Buffer inputBuffer;
 /* Public function prototypes -----------------------------------------------*/
 
 void FSM_Init();
+void FSM(void* dummy);
 
 #endif // FSM_H_
 
