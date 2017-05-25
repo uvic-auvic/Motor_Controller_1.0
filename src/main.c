@@ -58,12 +58,6 @@ void vGeneralTaskInit(void){
 		NULL,                 // pvParameters
 		tskIDLE_PRIORITY + 1, // uxPriority
 		NULL              ); // pvCreatedTask */
-//    xTaskCreate(FSM,
-//		(const signed char *)"FSM",
-//		configMINIMAL_STACK_SIZE,
-//		NULL,                 // pvParameters
-//		tskIDLE_PRIORITY + 1, // uxPriority
-//		NULL              ); // pvCreatedTask */
 
 }
 

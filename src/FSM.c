@@ -10,6 +10,7 @@
 #include "PWM_in.h"
 #include "FreeRTOS.h"
 #include "task.h"
+#include "temp_sensor.h"
 
 #define CHAR_TO_INT (48)
 
@@ -119,11 +120,22 @@ extern void FSM(void *dummy){
 			strcpy(tempOutputString, "ACK\r\n");
 			UART_push_out(tempOutputString);
 		}
+		//RID
 		else if(strcmp(commandString, "RID") == 0){
 			UART_push_out("Motor ");
 			UART_push_out("Control");
 			UART_push_out("ler\r\n");
 		}
+		//Get Temperature
+		else if(strcmp(commandString, "TMP") == 0){
+			tempVar = actual_temperature;
+			tempOutputString[0] = (char)(tempVar /10 + 48);
+			tempOutputString[1] = (char)(tempVar % 10 + 48);
+			tempOutputString[2] = '\r';
+			tempOutputString[3] = '\n';
+			UART_push_out_len(tempOutputString, 4);
+			}
+		//catch all error
 		else{
 			UART_push_out("error: ");
 			UART_push_out(commandString);

@@ -10,7 +10,6 @@
 uint16_t temp = 0;	//received data
 uint16_t actual_temperature = 0;
 
-
 void tempUpdates(void *dummy){
 
 
@@ -30,7 +29,7 @@ void tempUpdates(void *dummy){
 
 		actual_temperature = (temp>>5)/(8);
 
-		vTaskDelay(100);
+		vTaskDelay(500);
 	}
 }
 
