@@ -8,6 +8,8 @@
 #ifndef TEMP_SENSOR_H_
 #define TEMP_SENSOR_H_
 
+uint16_t actual_temperature;
 void tempUpdates(void *dummy);
+
 
 #endif /* TEMP_SENSOR_H_ */
