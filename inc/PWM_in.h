@@ -6,6 +6,7 @@
 #define CLOCK_PERIOD			(50000)
 #define MOTOR_HZ_RATIO			((CLOCK_PERIOD) / (MAX_PWM_FREQUENCY))
 #define CYCLES_PER_REV			(7)
+#define ONE_HZ_TO_RPM			(60)
 
 #include "motors.h"
 
@@ -13,5 +14,6 @@
 extern void pwm_in_init(void);
 extern int read_duty_cycle_percent_1000(motor m);
 extern int read_frequency_hz(motor m);
+extern int read_frequency_rpm(motor m);
 
 #endif

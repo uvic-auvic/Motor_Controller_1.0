@@ -32,8 +32,7 @@ extern int read_duty_cycle_percent_10000(motor m){
 	else return 0;
 }
 
-// Reads to the frequency of the PWM signal (Hz) of the specified motor
-extern int read_frequency_hz(motor m){
+static int get_clock_cycles(motor m){
 	int period_clk_cycles = 0;
 	switch(m){
 	case motor1:
@@ -46,10 +45,30 @@ extern int read_frequency_hz(motor m){
 		period_clk_cycles = TIM2->CCR2;
 		break;
 	}
+	return period_clk_cycles;
+}
+
+// Reads to the frequency of the PWM signal (Hz) of the specified motor
+extern int read_frequency_hz(motor m){
+	int period_clk_cycles = 0;
+	period_clk_cycles = get_clock_cycles(m);
 
 	// Make sure I don't divide by 0
 	if(period_clk_cycles)
-		return CLOCK_PERIOD / period_clk_cycles;
+		return CLOCK_PERIOD / (period_clk_cycles * ONE_HZ_TO_RPM);
+	else return 0;
+}
+
+// Reads to the frequency of the PWM signal (Hz) of the specified motor
+extern int read_frequency_rpm(motor m){
+	int period_clk_cycles = 0;
+	period_clk_cycles = get_clock_cycles(m);
+
+	// Make sure I don't divide by 0
+	if(period_clk_cycles){
+		period_clk_cycles =  (60 * 40 *  CLOCK_PERIOD) / period_clk_cycles;
+		return period_clk_cycles;
+	}
 	else return 0;
 }
 
@@ -171,7 +190,7 @@ static void timer1_IT_config(){
 
 	/* Setup counting structure for TIM1 */
 	TIM_TimeBaseStructure.TIM_Period = 50000-1;
-	TIM_TimeBaseStructure.TIM_Prescaler = 960-1;
+	TIM_TimeBaseStructure.TIM_Prescaler = (960/40)-1;
 	TIM_TimeBaseStructure.TIM_ClockDivision = 0;
 	TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_Up;
 	TIM_TimeBaseInit(TIM1, &TIM_TimeBaseStructure);
@@ -218,7 +237,7 @@ static void timer2_IT_config(){
 
 	/* Setup counting structure for TIM2 */
 	TIM_TimeBaseStructure.TIM_Period = 50000-1;
-	TIM_TimeBaseStructure.TIM_Prescaler = 960-1;
+	TIM_TimeBaseStructure.TIM_Prescaler = (960/40)-1;
 	TIM_TimeBaseStructure.TIM_ClockDivision = 0;
 	TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_Up;
 	TIM_TimeBaseInit(TIM2, &TIM_TimeBaseStructure);
@@ -261,7 +280,7 @@ static void timer15_IT_config(){
 
 	/* Setup counting structure for TIM15 */
 	TIM_TimeBaseStructure.TIM_Period = 50000-1;
-	TIM_TimeBaseStructure.TIM_Prescaler = 960-1;
+	TIM_TimeBaseStructure.TIM_Prescaler = (960/40)-1;
 	TIM_TimeBaseStructure.TIM_ClockDivision = 0;
 	TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_Up;
 	TIM_TimeBaseInit(TIM15, &TIM_TimeBaseStructure);

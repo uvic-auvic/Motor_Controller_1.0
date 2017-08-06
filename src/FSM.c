@@ -60,7 +60,7 @@ extern void FSM(void *dummy){
 			if(commandString[2] == 'A')
 			{
 				// Find rev/s for motor1
-				tempVar = read_frequency_hz(motor1) / CYCLES_PER_REV;
+				tempVar = read_frequency_rpm(motor1) / CYCLES_PER_REV;
 				tempOutputString[0] = '(';
 				tempOutputString[1] = (char)(tempVar & 0xFF);
 				tempOutputString[2] = (char)((tempVar >> 8) & 0xFF);
@@ -68,7 +68,7 @@ extern void FSM(void *dummy){
 				UART_push_out_len(tempOutputString, 4);
 
 				// Find rev/s for motor2
-				tempVar = read_frequency_hz(motor2) / CYCLES_PER_REV;
+				tempVar = read_frequency_rpm(motor2) / CYCLES_PER_REV;
 				tempOutputString[0] = '(';
 				tempOutputString[1] = (char)(tempVar & 0xFF);
 				tempOutputString[2] = (char)((tempVar >> 8) & 0xFF);
@@ -76,7 +76,7 @@ extern void FSM(void *dummy){
 				UART_push_out_len(tempOutputString, 4);
 
 				// Find rev/s for motor3
-				tempVar = read_frequency_hz(motor3) / CYCLES_PER_REV;
+				tempVar = read_frequency_rpm(motor3) / CYCLES_PER_REV;
 				tempOutputString[0] = '(';
 				tempOutputString[1] = (char)(tempVar & 0xFF);
 				tempOutputString[2] = (char)((tempVar >> 8) & 0xFF);
@@ -88,7 +88,7 @@ extern void FSM(void *dummy){
 				int motor = commandString[2] - CHAR_TO_INT - 1; // zero based
 
 				// Determine the rev/s
-				tempVar = read_frequency_hz(motor) / CYCLES_PER_REV;
+				tempVar = read_frequency_rpm(motor) / CYCLES_PER_REV;
 				tempOutputString[0] = (char)(tempVar & 0xFF);
 				tempOutputString[1] = (char)((tempVar >> 8) & 0xFF);
 				UART_push_out_len(tempOutputString, 2);
